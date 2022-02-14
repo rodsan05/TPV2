@@ -1,0 +1,29 @@
+{
+  
+  "fonts" : [
+    { "id" : "ARIAL16", "file" : "resources/fonts/ARIAL.ttf", "size": 16 },
+    { "id" : "ARIAL24", "file" : "resources/fonts/ARIAL.ttf", "size": 24 }
+  ],
+  
+  "images" : [
+    { "id" : "pacman_sprites", "file" : "resources/images/pacman_sprites.png" },
+    { "id" : "heart", "file" : "resources/images/heart.png" }
+  ],
+  
+  "messages" : [
+    { "id" : "start", "text" : "Press Space to Start", "font" : "ARIAL24", "color" : "0x11aa66ff", "bg" : "0xffffffff" },
+    { "id" : "continue", "text" : "Press Space to Continue", "font" : "ARIAL24", "color" : "0x0000ffff", "bg" : "0xffffffff" },
+    { "id" : "gameover", "text" : "Game Over", "font" : "ARIAL24", "color" : "0x0000ffff" },
+    { "id" : "winner", "text" : "You Won!", "font" : "ARIAL24", "color" : "0x00ff00ff" },
+    { "id" : "loser", "text" : "You Lost!", "font" : "ARIAL24", "color" : "0x00ff00ff" }
+  ],
+  
+  "sounds" : [
+    { "id" : "pacman_chomp", "file" : "resources/sound/pacman_chomp.wav" },
+    { "id" : "pacman_eat", "file" : "resources/sound/pacman_eat.wav" },
+    { "id" : "pacman_death", "file" : "resources/sound/pacman_death.wav" },
+    { "id" : "pacman_intro", "file" : "resources/sound/pacman_intro.wav" },
+    { "id" : "pacman_won", "file" : "resources/sound/pacman_won.wav" }
+  ]
+
+}

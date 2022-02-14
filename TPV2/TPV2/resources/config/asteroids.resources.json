@@ -1,0 +1,34 @@
+{
+
+  "fonts" : [
+    { "id" : "ARIAL16", "file" : "resources/fonts/ARIAL.ttf", "size": 16 },
+    { "id" : "ARIAL24", "file" : "resources/fonts/ARIAL.ttf", "size": 24 }
+  ],
+  
+  "images" : [
+    { "id" : "asteroid", "file" : "resources/images/asteroid.png" },
+    { "id" : "asteroid_gold", "file" : "resources/images/asteroid_gold.png" },
+    { "id" : "fighter", "file" : "resources/images/fighter.png" },
+    { "id" : "whiterect", "file" : "resources/images/whiterect.png" },
+    { "id" : "heart", "file" : "resources/images/heart.png" },
+    { "id" : "fire", "file" : "resources/images/fire.png" }
+  ],
+  
+  "messages" : [
+    { "id" : "start", "text" : "Press Space to Start", "font" : "ARIAL24", "color" : "0xffffffff"},
+    { "id" : "continue", "text" : "Press Space to Continue", "font" : "ARIAL24", "color" : "0x112233ff", "bg" : "0xffffffff" },
+    { "id" : "gameover", "text" : "Game Over", "font" : "ARIAL24", "color" : "0x0000ffff" }
+  ],
+  
+  "sounds" : [
+    { "id" : "fire", "file" : "resources/sound/fire.wav" },
+    { "id" : "gunshot", "file" : "resources/sound/gunshot.wav" },
+    { "id" : "bangSmall", "file" : "resources/sound/bangSmall.wav" },
+    { "id" : "bangLarge", "file" : "resources/sound/bangLarge.wav" },
+    { "id" : "explosion", "file" : "resources/sound/explosion.wav" },
+    { "id" : "explosion1", "file" : "resources/sound/explosion1.wav" },
+    { "id" : "thrust", "file" : "resources/sound/thrust.wav" },
+    { "id" : "thrust1", "file" : "resources/sound/thrust1.wav" }
+  ]
+
+}
