@@ -4,14 +4,40 @@
     { "id" : "ARIAL16", "file" : "resources/fonts/ARIAL.ttf", "size": 16 },
     { "id" : "ARIAL24", "file" : "resources/fonts/ARIAL.ttf", "size": 24 }
   ],
-  
-  "images" : [
-    { "id" : "asteroid", "file" : "resources/images/asteroid.png" },
-    { "id" : "asteroid_gold", "file" : "resources/images/asteroid_gold.png" },
-    { "id" : "fighter", "file" : "resources/images/fighter.png" },
-    { "id" : "whiterect", "file" : "resources/images/whiterect.png" },
-    { "id" : "heart", "file" : "resources/images/heart.png" },
-    { "id" : "fire", "file" : "resources/images/fire.png" }
+
+  "images": [
+    {
+      "id": "asteroid",
+      "file": "resources/images/asteroid.png"
+    },
+    {
+      "id": "asteroid_gold",
+      "file": "resources/images/asteroid_gold.png"
+    },
+    {
+      "id": "fighter",
+      "file": "resources/images/fighter.png"
+    },
+    {
+      "id": "whiterect",
+      "file": "resources/images/whiterect.png"
+    },
+    {
+      "id": "heart",
+      "file": "resources/images/heart.png"
+    },
+    {
+      "id": "star",
+      "file": "resources/images/star.png"
+    },
+    {
+      "id": "pacman",
+      "file": "resources/images/pacman.png"
+    },
+    {
+      "id": "fire",
+      "file": "resources/images/fire.png"
+    }
   ],
   
   "messages" : [
