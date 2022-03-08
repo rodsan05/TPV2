@@ -16,6 +16,7 @@
 #include "../sdlutils/SDLUtils.h"
 #include "../utils/Vector2D.h"
 #include "../utils/Collisions.h"
+#include "../components/Gun.h"
 
 using ecs::Entity;
 using ecs::Manager;
@@ -50,6 +51,7 @@ void Game::init() {
 	fighter->addComponent<ShowAtOppositeSide>();
 	fighter->addComponent<DeAcceleration>();
 	fighter->addComponent<Health>();
+	fighter->addComponent<Gun>();
 
 	// create the game info entity
 	auto ginfo = mngr_->addEntity();

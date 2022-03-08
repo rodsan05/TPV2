@@ -11,9 +11,9 @@ public:
 	// This line expands to the following (see the defintion of
 	// __CMPID_DECL__ en ecs.h):
 	//
-	//    constexpr static ecs::cmpId_type id = ecs::_PACMANCTRL
+	//    constexpr static ecs::cmpId_type id = ecs::_FIGHTERCTRL
 	//
-	__CMPID_DECL__(ecs::_PACMANCTRL)
+	__CMPID_DECL__(ecs::_FIGHTERCTRL)
 
 	FighterCtrl();
 	virtual ~FighterCtrl();
