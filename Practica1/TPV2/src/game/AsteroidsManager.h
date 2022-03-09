@@ -2,7 +2,13 @@
 
 #include "../ecs/Manager.h"
 #include "../ecs/Entity.h"	
+
+#include "../sdlutils/SDLUtils.h"
+
 #include "../components/Transform.h"
+#include "../components/FramedImage.h"
+#include "../components/ShowAtOppositeSide.h"
+#include "../components/Generations.h"
 
 
 using namespace ecs;
@@ -25,7 +31,7 @@ private:
 
 	Manager* mngr_;
 
-	void createAsteroid();
+	void createAsteroid(int type, int gens);
 
 	int nAsteroids_;
 };

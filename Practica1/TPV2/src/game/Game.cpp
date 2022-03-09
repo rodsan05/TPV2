@@ -17,6 +17,7 @@
 #include "../utils/Vector2D.h"
 #include "../utils/Collisions.h"
 #include "../components/Gun.h"
+#include "../game/AsteroidsManager.h"
 
 using ecs::Entity;
 using ecs::Manager;
@@ -57,6 +58,10 @@ void Game::init() {
 	auto ginfo = mngr_->addEntity();
 	mngr_->setHandler(ecs::_hdlr_GAMEINFO, ginfo);
 	ginfo->addComponent<GameCtrl>();
+
+	//asteroids manager
+	auto astManager = new AsteroidsManager(mngr_);
+	astManager->createAsteroids(10);
 }
 
 void Game::start() {

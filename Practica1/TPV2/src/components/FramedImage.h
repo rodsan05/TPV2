@@ -11,7 +11,7 @@ public:
 	__CMPID_DECL__(ecs::_IMAGE)
 
 	FramedImage();
-	FramedImage(Texture* text, int rows_, int columns, int timeBetweenFrames, int frame = 0);
+	FramedImage(Texture* text, int rows_, int columns, int timeBetweenFrames, int nFrames, int frame = 0);
 	~FramedImage();
 
 	void setTexture(Texture* text) {
@@ -28,6 +28,8 @@ private:
 
 	float frameHeight_;
 	float frameWidth_;
+
+	int nFrames_;
 
 	int columns_;
 	int rows_;
