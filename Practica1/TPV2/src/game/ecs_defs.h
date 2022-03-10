@@ -15,7 +15,8 @@
 	_DEACCELERATION, \
 	_HEALTH, \
 	_GUN, \
-	_GENERATIONS
+	_GENERATIONS, \
+	_FOLLOW
 
 
 // Groups list - must have at least one element
@@ -28,6 +29,6 @@
 // Handlers list - must have at least one element
 //
 #define _HDLRS_LIST_ \
-    _hdlr_PACMAN, \
+    _hdlr_FIGHTER, \
 	_hdlr_GAMEINFO
 

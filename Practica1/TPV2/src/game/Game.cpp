@@ -2,7 +2,6 @@
 
 #include "Game.h"
 
-#include "../components/GameCtrl.h"
 #include "../components/Image.h"
 #include "../components/FighterCtrl.h"
 #include "../components/StopOnBorders.h"
@@ -23,11 +22,12 @@ using ecs::Entity;
 using ecs::Manager;
 
 Game::Game() :
-		mngr_(nullptr) {
+		mngr_(nullptr), astManager_(nullptr), game_state(START), victory_(true){
 }
 
 Game::~Game() {
 	delete mngr_;
+	delete astManager_;
 }
 
 void Game::init() {
@@ -40,28 +40,23 @@ void Game::init() {
 
 	// create the PacMan entity
 	//
-	auto fighter = mngr_->addEntity();
-	mngr_->setHandler(ecs::_hdlr_PACMAN, fighter);
-	auto tr = fighter->addComponent<Transform>();
+	fighter_ = mngr_->addEntity();
+	mngr_->setHandler(ecs::_hdlr_FIGHTER, fighter_);
+	auto tr = fighter_->addComponent<Transform>();
 	auto s = 50.0f;
 	auto x = (sdlutils().width() - s) / 2.0f;
 	auto y = (sdlutils().height() - s) / 2.0f;
 	tr->init(Vector2D(x, y), Vector2D(), s, s, 0.0f);
-	fighter->addComponent<Image>(&sdlutils().images().at("fighter"));
-	fighter->addComponent<FighterCtrl>();
-	fighter->addComponent<ShowAtOppositeSide>();
-	fighter->addComponent<DeAcceleration>();
-	fighter->addComponent<Health>();
-	fighter->addComponent<Gun>();
-
-	// create the game info entity
-	auto ginfo = mngr_->addEntity();
-	mngr_->setHandler(ecs::_hdlr_GAMEINFO, ginfo);
-	ginfo->addComponent<GameCtrl>();
+	fighter_->addComponent<Image>(&sdlutils().images().at("fighter"));
+	fighter_->addComponent<FighterCtrl>();
+	fighter_->addComponent<ShowAtOppositeSide>();
+	fighter_->addComponent<DeAcceleration>();
+	fighter_->addComponent<Health>();
+	fighter_->addComponent<Gun>();
 
 	//asteroids manager
-	auto astManager = new AsteroidsManager(mngr_);
-	astManager->createAsteroids(10);
+	astManager_ = new AsteroidsManager(mngr_);
+	astManager_->createAsteroids(10);
 }
 
 void Game::start() {
@@ -72,7 +67,6 @@ void Game::start() {
 	auto &ihdlr = ih();
 
 	while (!exit) {
-		Uint32 startTime = sdlutils().currRealTime();
 
 		// refresh the input handler
 		ihdlr.refresh();
@@ -82,54 +76,180 @@ void Game::start() {
 			continue;
 		}
 
-		mngr_->update();
-		mngr_->refresh();
+		if (game_state == START) {
+		
+			if (ihdlr.isKeyDown(SDL_SCANCODE_SPACE)) {
 
-		checkCollisions();
+				game_state = PLAYING;
+			}
 
-		sdlutils().clearRenderer();
-		mngr_->render();
-		sdlutils().presentRenderer();
+			renderMessage("start");
+		}
 
-		Uint32 frameTime = sdlutils().currRealTime() - startTime;
+		else if (game_state == PLAYING) {
 
-		if (frameTime < 10)
-			SDL_Delay(10 - frameTime);
+			Uint32 startTime = sdlutils().currRealTime();
+
+			mngr_->update();
+			mngr_->refresh();
+
+			astManager_->addAsteroidFrequently();
+
+			checkCollisions();
+
+			if (astManager_->hasPlayerWon()) game_state == GAMEOVER;
+
+			sdlutils().clearRenderer();
+			mngr_->render();
+			sdlutils().presentRenderer();
+
+			Uint32 frameTime = sdlutils().currRealTime() - startTime;
+
+			if (frameTime < 10)
+				SDL_Delay(10 - frameTime);
+		}
+
+		else if (game_state == CONTINUE) {
+
+			if (ihdlr.isKeyDown(SDL_SCANCODE_SPACE)) {
+
+				game_state = PLAYING;
+				astManager_->createAsteroids(10);
+			}
+
+			renderMessage("continue");
+		}
+
+		else if (game_state == GAMEOVER) {
+
+			if (ihdlr.isKeyDown(SDL_SCANCODE_SPACE)) {
+
+				game_state = START;
+				astManager_->createAsteroids(10);
+
+				fighter_->getComponent<Health>()->resetLives();
+			}
+
+			renderGameOver();
+		}
 	}
 
 }
 
 void Game::checkCollisions() {
 
-	// the PacMan's Transform
-	//
-	auto pTR = mngr_->getHandler(ecs::_hdlr_PACMAN)->getComponent<Transform>();
+	auto player = mngr_->getHandler(ecs::_hdlr_FIGHTER);
+	auto pTr = player->getComponent<Transform>();
+	auto pHealth = player->getComponent<Health>();
 
-	// For safety, we traverse with a normal loop until the current size. In this
-	// particular case we could use a for-each loop since the list stars is not
-	// modified.
-	//
-	auto &stars = mngr_->getEntities(ecs::_grp_STARS);
-	auto n = stars.size();
+	auto& asteroids = mngr_->getEntities(ecs::_grp_ASTEROIDS);
+	auto& bullets = mngr_->getEntities(ecs::_grp_BULLETS);
+
+	auto n = asteroids.size();
+	auto p = bullets.size();
+
 	for (auto i = 0u; i < n; i++) {
-		auto e = stars[i];
-		if (e->isAlive()) { // if the star is active (it might have died in this frame)
 
-			// the Star's Transform
-			//
-			auto eTR = e->getComponent<Transform>();
+		auto a = asteroids[i];
+		if (a->isAlive()) {
 
-			// check if PacMan collides with the Star (i.e., eat it)
-			if (Collisions::collides(pTR->getPos(), pTR->getWidth(),
-					pTR->getHeight(), //
-					eTR->getPos(), eTR->getWidth(), eTR->getHeight())) {
-				e->setAlive(false);
-				mngr_->getHandler(ecs::_hdlr_GAMEINFO)->getComponent<GameCtrl>()->onStarEaten();
+			//collision bullets
+			auto aTr = a->getComponent<Transform>();
 
-				// play sound on channel 1 (if there is something playing there
-				// it will be cancelled
-				//sdlutils().soundEffects().at("pacman_eat").play(0, 1);
+			for (auto j = 0u; j < p; j++) {
+
+				auto b = bullets[j];
+				if (b->isAlive()) {
+
+					auto bTr = b->getComponent<Transform>();
+
+					if (Collisions::collidesWithRotation(aTr->getPos(), aTr->getWidth(), aTr->getHeight(), aTr->getRot(),
+						bTr->getPos(), bTr->getWidth(), bTr->getHeight(), bTr->getRot())) {
+
+						a->setAlive(false);
+						astManager_->onCollision(a);
+					}
+				}
+			}
+
+			//collision player
+
+			if (Collisions::collidesWithRotation(aTr->getPos(), aTr->getWidth(), aTr->getHeight(), aTr->getRot(),
+				pTr->getPos(), pTr->getWidth(), pTr->getHeight(), pTr->getRot())) {
+
+				//destroy asteroid
+				astManager_->destroyAllAsteroids();
+
+				//destroy bullets
+				for (auto j = 0u; j < p; j++) {
+
+					auto b = bullets[j];
+					if (b->isAlive()) {
+
+						b->setAlive(false);
+					}
+				}
+
+				auto cx = sdlutils().width() / 2 - pTr->getWidth() / 2;
+				auto cy = sdlutils().height() / 2 - pTr->getHeight() / 2;
+
+				pTr->getPos().set(cx, cy);
+				pTr->getVel().set(Vector2D(0.0f, 0.0f));
+				pTr->setRot(0.0f);
+
+				pHealth->doDamage(1);
+
+				if (pHealth->actualLives() > 0) game_state = CONTINUE;
+
+				else {
+
+					game_state = GAMEOVER;
+					victory_ = false;
+				}
 			}
 		}
 	}
+}
+
+void Game::renderGameOver()
+{
+	int width = sdlutils().width();
+	int height = sdlutils().height();
+
+	Texture* text = &sdlutils().msgs().at("continue");
+	
+	Texture* gameOverText;
+	if (!victory_) gameOverText = &sdlutils().msgs().at("gameover");
+	else gameOverText = &sdlutils().msgs().at("victory");
+
+	int cx = sdlutils().width() / 2 - text->width() / 2;
+	int cy = sdlutils().height() / 2 - text->height() / 2;
+
+	sdlutils().clearRenderer();
+	text->render(cx, cy + 50);
+
+	cx = sdlutils().width() / 2 - gameOverText->width() / 2;
+	cy = sdlutils().height() / 2 - gameOverText->height() / 2;
+	gameOverText->render(cx, cy - 100);
+
+	fighter_->getComponent<Image>()->render();
+	fighter_->getComponent<Health>()->render();
+	sdlutils().presentRenderer();
+}
+
+void Game::renderMessage(std::string name)
+{
+	int width = sdlutils().width();
+	int height = sdlutils().height();
+
+	Texture* text = &sdlutils().msgs().at(name);
+
+	int cx = sdlutils().width() / 2 - text->width() / 2;
+	int cy = sdlutils().height() / 2 - text->height() / 2;
+
+	sdlutils().clearRenderer();
+	text->render(cx, cy + 50);
+	fighter_->getComponent<Image>()->render();
+	fighter_->getComponent<Health>()->render();
+	sdlutils().presentRenderer();
 }

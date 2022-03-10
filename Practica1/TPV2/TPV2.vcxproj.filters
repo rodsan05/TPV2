@@ -108,13 +108,7 @@
     <ClInclude Include="src\game\Game.h">
       <Filter>Header Files\game</Filter>
     </ClInclude>
-    <ClInclude Include="src\components\GameCtrl.h">
-      <Filter>Header Files\components</Filter>
-    </ClInclude>
     <ClInclude Include="src\components\Image.h">
-      <Filter>Header Files\components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\components\StarMotion.h">
       <Filter>Header Files\components</Filter>
     </ClInclude>
     <ClInclude Include="src\components\StopOnBorders.h">
@@ -206,13 +200,7 @@
     <ClCompile Include="src\game\Game.cpp">
       <Filter>Source Files\game</Filter>
     </ClCompile>
-    <ClCompile Include="src\components\GameCtrl.cpp">
-      <Filter>Source Files\components</Filter>
-    </ClCompile>
     <ClCompile Include="src\components\Image.cpp">
-      <Filter>Source Files\components</Filter>
-    </ClCompile>
-    <ClCompile Include="src\components\StarMotion.cpp">
       <Filter>Source Files\components</Filter>
     </ClCompile>
     <ClCompile Include="src\components\StopOnBorders.cpp">

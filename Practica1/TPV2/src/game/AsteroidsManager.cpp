@@ -1,12 +1,13 @@
 #include "AsteroidsManager.h"
+#include "../components/Follow.h"
 
-
-AsteroidsManager::AsteroidsManager(ecs::Manager* manager) : mngr_(manager), nAsteroids_(0)
+AsteroidsManager::AsteroidsManager(ecs::Manager* manager) : mngr_(manager), nAsteroids_(0), lastTimeAsteroidCreated_(0)
 {
 }
 
 AsteroidsManager::~AsteroidsManager()
 {
+	destroyAllAsteroids();
 }
 
 void AsteroidsManager::createAsteroids(int n)
@@ -28,17 +29,66 @@ void AsteroidsManager::createAsteroids(int n)
 
 void AsteroidsManager::addAsteroidFrequently()
 {
+	int time = sdlutils().currRealTime();
+
+	if (time - lastTimeAsteroidCreated_ >= TIME_BETWEEN_ASTEROIDS && nAsteroids_ < 30) {
+		
+		createAsteroids(1);
+
+		lastTimeAsteroidCreated_ = time;
+	}
 }
 
 void AsteroidsManager::destroyAllAsteroids()
 {
+	for (auto ast : mngr_->getEntities(ecs::_grp_ASTEROIDS)) {
+	
+		ast->setAlive(false);
+	}
 }
 
 void AsteroidsManager::onCollision(Entity* a)
 {
+	a->setAlive(false);
+
+	auto tr = a->getComponent<Transform>();
+	auto gensA = a->getComponent<Generations>();
+
+	assert(a != nullptr && gensA != nullptr);
+
+	if (gensA->nGenerations() > 0) {
+
+		auto p = tr->getPos();
+		auto v = tr->getVel();
+
+		float w = 10.0f + 5.0f * (gensA->nGenerations() - 1);
+		float h = w;
+
+		for (int i = 0; i < 2; i++) {
+
+			if (nAsteroids_ < 30) {
+				auto r = sdlutils().rand().nextInt(0, 360);
+				auto pos = p + v.rotate(r) * 2 * std::max(w, h);
+				auto vel = v.rotate(r) * 1.1f;
+
+				int type;
+				if (a->getComponent<Follow>() == nullptr)
+					type = 0;
+
+				else type = 1;
+
+				createAsteroid(type, gensA->nGenerations() - 1, pos.getX(), pos.getY(), vel);
+			}
+		}
+	}
 }
 
-void AsteroidsManager::createAsteroid(int type, int gens)
+bool AsteroidsManager::hasPlayerWon()
+{
+	return nAsteroids_ == 0;
+}
+
+void AsteroidsManager::createAsteroid(int type, int gens, int x, int y, Vector2D vel)
 {
 	int width = sdlutils().width();
 	int height = sdlutils().height();
@@ -53,8 +103,14 @@ void AsteroidsManager::createAsteroid(int type, int gens)
 
 	//position
 	Vector2D pos;
-	if (axis == 0) pos = Vector2D(sdlutils().rand().nextInt(0, width), 0);
-	else pos = Vector2D(0, sdlutils().rand().nextInt(0, height));
+
+	if (x == -1) {
+
+		if (axis == 0) pos = Vector2D(sdlutils().rand().nextInt(0, width), 0);
+		else pos = Vector2D(0, sdlutils().rand().nextInt(0, height));
+	}
+
+	else pos = Vector2D(x, y);
 
 	//velocity
 	auto c = Vector2D(width / 2, height / 2);
@@ -62,11 +118,14 @@ void AsteroidsManager::createAsteroid(int type, int gens)
 	auto ry = sdlutils().rand().nextInt(-100, 100);
 
 	float speed = sdlutils().rand().nextInt(1, 10) / 10.0f;
-	Vector2D vel = (c - pos).normalize() * speed;
+	Vector2D v;
+
+	if (vel.magnitude() == 0) v = (c - pos).normalize() * speed;
+	else v = vel;
 
 	//height and width
 	float w = 10.0f + 5.0f * g->nGenerations();
-	tr_->init(pos, vel, w, w, 0);
+	tr_->init(pos, v, w, w, 0);
 
 	asteroid->addComponent<ShowAtOppositeSide>();
 
@@ -78,5 +137,6 @@ void AsteroidsManager::createAsteroid(int type, int gens)
 	else {
 	
 		asteroid->addComponent<FramedImage>(&sdlutils().images().at("asteroid_gold"), 5, 6, 50, 30);
+		asteroid->addComponent<Follow>();
 	}
 }

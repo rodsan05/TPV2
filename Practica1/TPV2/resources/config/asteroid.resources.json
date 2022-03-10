@@ -23,8 +23,8 @@
     { "id" : "start", "text" : "Press space to start", "font" : "ARIAL24", "color" : "0x441155ff"},
     { "id" : "continue", "text" : "Press space to continue", "font" : "ARIAL24", "color" : "0x112233ff", "bg" : "0xffffffff" },
     { "id" : "gameover", "text" : "Game Over", "font" : "ARIAL24", "color" : "0x0000ffff" },
-    { "id" : "PressAnyKey", "text" : "Press Any Key", "font" : "ARIAL24", "color" : "0x112233ff", "bg" : "0xffffffff" },
-    { "id" : "addstars", "text" : "Press SPACE to add stars to eat!", "font" : "ARIAL16", "color" : "0x00ff00ff" }
+    { "id" : "victory", "text" : "Player Won!", "font" : "ARIAL24", "color" : "0x0000ffff" },
+    { "id" : "PressAnyKey", "text" : "Press Any Key", "font" : "ARIAL24", "color" : "0x112233ff", "bg" : "0xffffffff" }
   ],
   
   "sounds" : [

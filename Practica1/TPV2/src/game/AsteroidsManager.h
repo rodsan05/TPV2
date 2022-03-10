@@ -27,12 +27,27 @@ public:
 
 	void onCollision(Entity* a);
 
+	bool hasPlayerWon();
+
 private:
+
+	const int TIME_BETWEEN_ASTEROIDS = 5000;
 
 	Manager* mngr_;
 
-	void createAsteroid(int type, int gens);
+	/**
+	* Create an asteroid
+	* 
+	* @param type: Type of the asteroid (0 = type A, 1 = type B)
+	* @param gens: Number of generations of the asteroid
+	* @param x: coordinate x of the asteroid (if not specified is selected randomly)
+	* @param y: coordinate y of the asteroid (if not specified is selected randomly)
+	* @param vel: velocity of the asteroid (if not specified is selected randomly)
+	*/
+	void createAsteroid(int type, int gens, int x = -1, int y = -1, Vector2D vel = Vector2D(0, 0));
 
 	int nAsteroids_;
+
+	int lastTimeAsteroidCreated_;
 };
 
