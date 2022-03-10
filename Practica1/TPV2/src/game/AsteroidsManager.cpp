@@ -99,15 +99,20 @@ void AsteroidsManager::createAsteroid(int type, int gens, int x, int y, Vector2D
 
 	auto tr_ = asteroid->addComponent<Transform>();
 	
-	int axis = sdlutils().rand().nextInt(0, 2);
+	int border = sdlutils().rand().nextInt(0, 4);
+
+	//height and width
+	float w = 10.0f + 5.0f * g->nGenerations();
 
 	//position
 	Vector2D pos;
 
 	if (x == -1) {
 
-		if (axis == 0) pos = Vector2D(sdlutils().rand().nextInt(0, width), 0);
-		else pos = Vector2D(0, sdlutils().rand().nextInt(0, height));
+		if (border == 0) pos = Vector2D(sdlutils().rand().nextInt(0, width - w), 0);
+		else if (border == 1) pos = Vector2D(sdlutils().rand().nextInt(0, width - w), height - w);
+		else if (border == 2) pos = Vector2D(0, sdlutils().rand().nextInt(0, height - w));
+		else if (border == 3) pos = Vector2D(width - w, sdlutils().rand().nextInt(0, height - w));
 	}
 
 	else pos = Vector2D(x, y);
@@ -123,8 +128,6 @@ void AsteroidsManager::createAsteroid(int type, int gens, int x, int y, Vector2D
 	if (vel.magnitude() == 0) v = (c - pos).normalize() * speed;
 	else v = vel;
 
-	//height and width
-	float w = 10.0f + 5.0f * g->nGenerations();
 	tr_->init(pos, v, w, w, 0);
 
 	asteroid->addComponent<ShowAtOppositeSide>();
