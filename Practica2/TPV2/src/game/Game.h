@@ -9,7 +9,7 @@ class Manager;
 }
 
 class BallSystem;
-class PaddlesSystem;
+class FighterSystem;
 class GameCtrlSystem;
 class CollisionsSystem;
 class RenderSystem;
@@ -25,7 +25,7 @@ private:
 	ecs::Manager *mngr_;
 
 	BallSystem *ballSys_;
-	PaddlesSystem *paddlesSys_;
+	FighterSystem *paddlesSys_;
 	GameCtrlSystem *gameCtrlSys_;
 	CollisionsSystem *collisionsSys_;
 	RenderSystem *renderSys_;

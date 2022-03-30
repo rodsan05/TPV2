@@ -17,10 +17,7 @@ public:
 	void initSystem() override;
 	void update() override;
 private:
-	void resetBall();
-	void moveBall();
-	void changeDirection();
-
+	
 	Transform *ballTr_;
 };
 

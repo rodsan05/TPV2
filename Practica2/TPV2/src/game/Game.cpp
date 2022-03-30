@@ -40,7 +40,7 @@ void Game::init() {
 	mngr_ = new Manager();
 
 	ballSys_ = mngr_->addSystem<BallSystem>();
-	paddlesSys_ = mngr_->addSystem<PaddlesSystem>();
+	paddlesSys_ = mngr_->addSystem<FighterSystem>();
 	gameCtrlSys_ = mngr_->addSystem<GameCtrlSystem>();
 	collisionsSys_ = mngr_->addSystem<CollisionsSystem>();
 	renderSys_ = mngr_->addSystem<RenderSystem>();

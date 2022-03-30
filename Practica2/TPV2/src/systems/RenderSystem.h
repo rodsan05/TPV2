@@ -18,7 +18,5 @@ private:
 	void drawScore();
 	void drawBall();
 	void drawPaddles();
-
-
 };
 

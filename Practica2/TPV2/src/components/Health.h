@@ -1,24 +1,28 @@
 #pragma once
 #include "../ecs/Component.h"
+#include "../sdlutils/SDLUtils.h"
+#include "../sdlutils/Texture.h"
 
-class Texture;
-
-class Health : public ecs::Component
+struct Health : public ecs::Component
 {
-public:
 	__CMPID_DECL__(ecs::_HEALTH)
 
-	Health();
-	~Health();
+	Health() : lives(INI_LIVES) {
 
-	int actualLives();
-	void resetLives();
+		text_ = &sdlutils().images().at("heart");
+	}
 
-	void doDamage(int dmg);
+	virtual ~Health() {}
 
-	void render() override;
+	void resetLives() {
 
-private:
+		lives = INI_LIVES;
+	}
+
+	void doDamage(int dmg) {
+
+		lives -= dmg;
+	}
 
 	Texture* text_;
 	const int INI_LIVES = 3;
@@ -27,4 +31,20 @@ private:
 
 	int lives;
 };
+
+//void Health::render()
+//{
+//	float heartPos = 5;
+//
+//	assert(text_ != nullptr);
+//
+//	for (int i = 0; i < lives; i++) {
+//
+//		Vector2D* pos = new Vector2D(heartPos, 5);
+//		SDL_Rect dest = build_sdlrect(*pos, HEART_WIDTH, HEART_HEIGHT);
+//		text_->render(dest);
+//
+//		heartPos += HEART_WIDTH + 5;
+//	}
+//}
 

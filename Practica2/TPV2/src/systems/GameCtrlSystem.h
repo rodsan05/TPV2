@@ -6,53 +6,29 @@
 
 #include "../ecs/System.h"
 
-struct GameState;
-
 class GameCtrlSystem: public ecs::System {
 public:
 
 	__SYSID_DECL__(ecs::_sys_GAMECTRL)
 
-
-	enum Side : uint8_t {
-		LEFT = 0, //
-		RIGHT
-	};
-
-	enum State {
-		NEWGAME = 0, // just before starting a new game
-		PAUSED, // between rounds
-		RUNNING, // playing
-		GAMEOVER // game over
-	};
-
 	GameCtrlSystem();
 	virtual ~GameCtrlSystem();
 
-	inline State getState() {
+	inline Uint8 getState() {
 		return state_;
-	}
-
-	inline unsigned int getScore(std::size_t player) {
-		return score_[player];
 	}
 
 	void update() override;
 	void recieve(const Message&) override;
-
-
+	void initSystem() override;
 
 private:
 
-	void onBallExit(Side side);
-	void startRound();
-	void startGame();
-	void roundOver();
-	void gameOver();
+	void onCollision_FighterAsteroid();
 
-	std::array<unsigned int, 2> score_;
-	State state_;
-	const unsigned int maxScore_;
+	void onAsteroidsExtinction();
 
+	Uint8 winner_;
+	Uint8 state_;
 };
 

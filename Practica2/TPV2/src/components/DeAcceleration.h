@@ -3,7 +3,7 @@
 
 struct DeAcceleration : public ecs::Component
 {
-	__CMPID_DECL__(ecs::_FOLLOW)
+	__CMPID_DECL__(ecs::_DEACCELERATION)
 
 	DeAcceleration() : deaccelValue_(0.955f) {}
 	DeAcceleration(float deacceleration) : deaccelValue_(deacceleration) {}

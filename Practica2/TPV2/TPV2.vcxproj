@@ -23,15 +23,12 @@
     <ClInclude Include="src\components\DisableOnExit.h" />
     <ClInclude Include="src\components\FighterCtrl.h" />
     <ClInclude Include="src\components\Follow.h" />
-    <ClInclude Include="src\components\FramedImage.h" />
-    <ClInclude Include="src\components\GameState.h" />
     <ClInclude Include="src\components\Generations.h" />
     <ClInclude Include="src\components\Gun.h" />
     <ClInclude Include="src\components\Health.h" />
     <ClInclude Include="src\components\Image.h" />
     <ClInclude Include="src\components\PaddleCtrl.h" />
     <ClInclude Include="src\components\RectangleViewer.h" />
-    <ClInclude Include="src\components\ShowAtOppositeSide.h" />
     <ClInclude Include="src\components\StopOnBorders.h" />
     <ClInclude Include="src\components\Transform.h" />
     <ClInclude Include="src\ecs\Component.h" />
@@ -61,7 +58,7 @@
     <ClInclude Include="src\systems\BallSystem.h" />
     <ClInclude Include="src\systems\CollisionsSystem.h" />
     <ClInclude Include="src\systems\GameCtrlSystem.h" />
-    <ClInclude Include="src\systems\PaddlesSystem.h" />
+    <ClInclude Include="src\systems\FighterSystem.h" />
     <ClInclude Include="src\systems\RenderSystem.h" />
     <ClInclude Include="src\utils\Collisions.h" />
     <ClInclude Include="src\utils\mpl.h" />
@@ -69,13 +66,6 @@
     <ClInclude Include="src\utils\Vector2D.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\components\FighterCtrl.cpp" />
-    <ClCompile Include="src\components\Follow.cpp" />
-    <ClCompile Include="src\components\FramedImage.cpp" />
-    <ClCompile Include="src\components\Health.cpp" />
-    <ClCompile Include="src\components\Image.cpp" />
-    <ClCompile Include="src\components\ShowAtOppositeSide.cpp" />
-    <ClCompile Include="src\components\StopOnBorders.cpp" />
     <ClCompile Include="src\ecs\Manager.cpp" />
     <ClCompile Include="src\game\Game.cpp" />
     <ClCompile Include="src\json\JSON.cpp" />
@@ -90,7 +80,7 @@
     <ClCompile Include="src\systems\BallSystem.cpp" />
     <ClCompile Include="src\systems\CollisionsSystem.cpp" />
     <ClCompile Include="src\systems\GameCtrlSystem.cpp" />
-    <ClCompile Include="src\systems\PaddlesSystem.cpp" />
+    <ClCompile Include="src\systems\FighterSystem.cpp" />
     <ClCompile Include="src\systems\RenderSystem.cpp" />
     <ClCompile Include="src\utils\Collisions.cpp" />
     <ClCompile Include="src\utils\Vector2D.cpp" />

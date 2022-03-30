@@ -51,9 +51,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\components\GameState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\components\Image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -147,9 +144,6 @@
     <ClInclude Include="src\systems\GameCtrlSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\systems\PaddlesSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\systems\RenderSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -177,9 +171,6 @@
     <ClInclude Include="src\components\Follow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\components\FramedImage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\components\Generations.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -189,10 +180,10 @@
     <ClInclude Include="src\components\Health.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\components\ShowAtOppositeSide.h">
+    <ClInclude Include="src\components\StopOnBorders.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\components\StopOnBorders.h">
+    <ClInclude Include="src\systems\FighterSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -236,9 +227,6 @@
     <ClCompile Include="src\systems\GameCtrlSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\systems\PaddlesSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\systems\RenderSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -251,25 +239,7 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\components\FighterCtrl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\components\Follow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\components\FramedImage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\components\Health.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\components\Image.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\components\ShowAtOppositeSide.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\components\StopOnBorders.cpp">
+    <ClCompile Include="src\systems\FighterSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

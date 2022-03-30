@@ -2,33 +2,31 @@
 
 #pragma once
 #include "../ecs/Component.h"
+#include <SDL.h>
+#include "../sdlutils/Texture.h"
+#include <cassert>
 
-class Transform;
-class Texture;
+struct Image: public ecs::Component {
 
-class Image: public ecs::Component {
-public:
-
-	// This line expands to the following (see the defintion of
-	// __CMPID_DECL__ en ecs.h):
-	//
-	//    constexpr static ecs::cmpId_type id = ecs::_IMAGE
-	//
 	__CMPID_DECL__(ecs::_IMAGE)
 
-	Image();
-	Image(Texture *tex);
-	virtual ~Image();
+	Image() : tex_() {}
+	Image(Texture* tex) : tex_(tex) {}
+	virtual ~Image() {}
 
 	void setTexture(Texture *tex) {
 		tex_ = tex;
 	}
 
-	void initComponent() override;
-	void render() override;
+	/*void render() {
 
-private:
-	Transform *tr_;
+		SDL_Rect dest = build_sdlrect(tr_->getPos(), tr_->getWidth(),
+			tr_->getHeight());
+
+		assert(tex_ != nullptr);
+		tex_->render(dest, tr_->getRot());
+	}*/
+
 	Texture *tex_;
 };
 

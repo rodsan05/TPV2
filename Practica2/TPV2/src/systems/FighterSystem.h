@@ -10,13 +10,13 @@ struct Transform;
 struct PaddleCtrl;
 class Vector2D;
 
-class PaddlesSystem: public ecs::System {
+class FighterSystem: public ecs::System {
 public:
 
 	__SYSID_DECL__(ecs::_sys_PADDLES)
 
-	PaddlesSystem();
-	virtual ~PaddlesSystem();
+	FighterSystem();
+	virtual ~FighterSystem();
 	void update() override;
 	void initSystem() override;
 
@@ -27,7 +27,7 @@ private:
 	void moveWithAI(PaddleCtrl*, Transform*);
 	bool ballComingTowardsPaddle(const Vector2D&);
 
-	Transform *ballTr_;
-
+	Transform *fighterTr_;
+	ecs::Entity* fighter_;
 };
 

@@ -3,9 +3,7 @@
 #pragma once
 #include "../ecs/Component.h"
 
-class Transform;
-
-class DisableOnExit : public ecs::Component {
+struct DisableOnExit: public ecs::Component{
 
 	__CMPID_DECL__(ecs::_ONBORDER)
 
