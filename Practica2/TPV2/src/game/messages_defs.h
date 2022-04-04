@@ -12,7 +12,7 @@ enum msgId : msgId_type {
 	_m_GAME_START, //
 	_m_GAME_OVER, //
 	_m_NEW_GAME, //
-	_m_BALL_EXIT, //
+	_m_CONTINUE, //
 	_m_BALL_HIT_PADDLE
 };
 
@@ -23,8 +23,9 @@ struct Message {
 	union {
 
 		struct {
-			uint8_t side;
-		} ball_exit;
+			uint8_t winner_;
+			uint8_t state_;
+		} state_change_;
 
 		struct {
 			ecs::Entity *e;

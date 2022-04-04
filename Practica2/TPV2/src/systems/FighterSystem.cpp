@@ -41,13 +41,19 @@ void FighterSystem::initSystem() {
 	mngr_->addComponent<Gun>(fighter_);
 }
 
+void FighterSystem::recieve(const Message& m)
+{
+}
+
 void FighterSystem::update() {
-	for (auto e : mngr_->getEntities(ecs::_grp_PADDLES)) {
-		movePaddle(e);
+	
+	if (active_) {
+
+		moveFighter(fighter_);
 	}
 }
 
-void FighterSystem::movePaddle(ecs::Entity *fighter) {
+void FighterSystem::moveFighter(ecs::Entity *fighter) {
 	
 	auto fighterCtrl = mngr_->getComponent<FighterCtrl>(fighter);
 
@@ -82,5 +88,19 @@ void FighterSystem::movePaddle(ecs::Entity *fighter) {
 	
 	if (pos.getY() > sdlutils().height()) pos.set(Vector2D(pos.getX(), 0));
 	else if (pos.getY() + fighterTr_->height_ < 0) pos.set(Vector2D(pos.getX(), height));
+}
+
+void FighterSystem::onCollision_FighterAsteroid()
+{
+}
+
+void FighterSystem::onRoundOver()
+{
+	active_ = false;
+}
+
+void FighterSystem::onRoundStart()
+{
+	active_ = true;
 }
 

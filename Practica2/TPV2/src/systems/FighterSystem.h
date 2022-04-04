@@ -17,15 +17,20 @@ public:
 
 	FighterSystem();
 	virtual ~FighterSystem();
+
+	void recieve(const Message& m) override;
 	void update() override;
 	void initSystem() override;
 
 private:
-	void movePaddle(ecs::Entity*);
-	void moveWithKeyboard(PaddleCtrl*, Transform*);
-	void moveWithMouse(PaddleCtrl*, Transform*);
-	void moveWithAI(PaddleCtrl*, Transform*);
-	bool ballComingTowardsPaddle(const Vector2D&);
+	void moveFighter(ecs::Entity*);
+
+	void onCollision_FighterAsteroid();
+
+	void onRoundOver();
+	void onRoundStart();
+
+	bool active_;
 
 	Transform *fighterTr_;
 	ecs::Entity* fighter_;

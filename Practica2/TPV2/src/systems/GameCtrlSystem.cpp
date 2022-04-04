@@ -21,8 +21,30 @@ void GameCtrlSystem::update() {
 
 		if (inhdlr.isKeyDown(SDL_SCANCODE_SPACE)) {
 			
+			if (state_ == 0) {
+				
+				Message m;
+				m.id = _m_GAME_START;
+				mngr_->send(m);
+			}
+			else if (state_ == 2) {
+
+				Message m;
+				m.id = _m_CONTINUE;
+				mngr_->send(m);
+			}
+			else if (state_ == 3) {
+			
+				Message m;
+				m.id = _m_ROUND_START;
+				mngr_->send(m);
+			}
 		}
 	}
+}
+
+void GameCtrlSystem::recieve(const Message&)
+{
 }
 
 void GameCtrlSystem::initSystem()
