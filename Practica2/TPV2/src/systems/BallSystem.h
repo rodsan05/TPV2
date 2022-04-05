@@ -9,7 +9,7 @@ class BallSystem: public ecs::System {
 public:
 	__SYSID_DECL__(ecs::_sys_BALL)
 
-	void recieve(const Message&) override;
+	void receive(const Message&) override;
 	BallSystem();
 	virtual ~BallSystem();
 

@@ -3,6 +3,7 @@
 #pragma once
 #include <array>
 #include <cstdint>
+#include <SDL_stdinc.h>
 
 #include "../ecs/System.h"
 
@@ -19,7 +20,7 @@ public:
 	}
 
 	void update() override;
-	void recieve(const Message&) override;
+	void receive(const Message&) override;
 	void initSystem() override;
 
 private:

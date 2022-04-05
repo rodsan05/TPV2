@@ -5,10 +5,8 @@
 #include "../ecs/Manager.h"
 #include "../sdlutils/InputHandler.h"
 #include "../sdlutils/SDLUtils.h"
-#include "../systems/BallSystem.h"
-#include "../systems/CollisionsSystem.h"
 #include "../systems/GameCtrlSystem.h"
-#include "../systems/PaddlesSystem.h"
+#include "../systems/FighterSystem.h"
 #include "../systems/RenderSystem.h"
 #include "../utils/Vector2D.h"
 #include "../utils/Collisions.h"
@@ -17,10 +15,8 @@ using ecs::Manager;
 
 Game::Game() :
 		mngr_(nullptr), //
-		ballSys_(nullptr), //
-		paddlesSys_(nullptr), //
+		fighterSys_(nullptr), //
 		gameCtrlSys_(nullptr), //
-		collisionsSys_(nullptr), //
 		renderSys_(nullptr) {
 }
 
@@ -32,17 +28,15 @@ void Game::init() {
 
 	// Initialize the SDLUtils singleton
 	SDLUtils::init("Ping Pong", 800, 600,
-			"resources/config/pingpong.resources.json");
+			"resources/config/asteroid.resources.json");
 
 	sdlutils().hideCursor();
 
 	// Create the manager
 	mngr_ = new Manager();
 
-	ballSys_ = mngr_->addSystem<BallSystem>();
-	paddlesSys_ = mngr_->addSystem<FighterSystem>();
+	fighterSys_ = mngr_->addSystem<FighterSystem>();
 	gameCtrlSys_ = mngr_->addSystem<GameCtrlSystem>();
-	collisionsSys_ = mngr_->addSystem<CollisionsSystem>();
 	renderSys_ = mngr_->addSystem<RenderSystem>();
 
 }
@@ -67,9 +61,7 @@ void Game::start() {
 
 		mngr_->refresh();
 
-		ballSys_->update();
-		paddlesSys_->update();
-		collisionsSys_->update();
+		fighterSys_->update();
 		gameCtrlSys_->update();
 
 		sdlutils().clearRenderer();

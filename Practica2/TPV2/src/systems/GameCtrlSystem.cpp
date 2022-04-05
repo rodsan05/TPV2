@@ -6,7 +6,7 @@
 #include "../sdlutils/InputHandler.h"
 #include "../sdlutils/SDLUtils.h"
 
-GameCtrlSystem::GameCtrlSystem() {
+GameCtrlSystem::GameCtrlSystem() : state_(0), winner_(0) {
 }
 
 GameCtrlSystem::~GameCtrlSystem() {
@@ -39,11 +39,13 @@ void GameCtrlSystem::update() {
 				m.id = _m_ROUND_START;
 				mngr_->send(m);
 			}
+
+			state_ = 1;
 		}
 	}
 }
 
-void GameCtrlSystem::recieve(const Message&)
+void GameCtrlSystem::receive(const Message&)
 {
 }
 

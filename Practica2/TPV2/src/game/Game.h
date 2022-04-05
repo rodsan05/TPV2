@@ -8,7 +8,6 @@ namespace ecs {
 class Manager;
 }
 
-class BallSystem;
 class FighterSystem;
 class GameCtrlSystem;
 class CollisionsSystem;
@@ -24,8 +23,7 @@ public:
 private:
 	ecs::Manager *mngr_;
 
-	BallSystem *ballSys_;
-	FighterSystem *paddlesSys_;
+	FighterSystem *fighterSys_;
 	GameCtrlSystem *gameCtrlSys_;
 	CollisionsSystem *collisionsSys_;
 	RenderSystem *renderSys_;

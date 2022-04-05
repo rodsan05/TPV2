@@ -18,7 +18,7 @@ public:
 	FighterSystem();
 	virtual ~FighterSystem();
 
-	void recieve(const Message& m) override;
+	void receive(const Message& m) override;
 	void update() override;
 	void initSystem() override;
 

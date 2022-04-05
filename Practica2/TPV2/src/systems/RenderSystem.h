@@ -17,6 +17,6 @@ private:
 	void drawMsgs();
 	void drawScore();
 	void drawBall();
-	void drawPaddles();
+	void drawFighter();
 };
 

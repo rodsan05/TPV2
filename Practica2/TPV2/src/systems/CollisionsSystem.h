@@ -10,7 +10,7 @@ public:
 
 	__SYSID_DECL__(ecs::_sys_COLLISIONS)
 
-	void recieve(const Message&) override;
+	void receive(const Message&) override;
 	CollisionsSystem();
 	virtual ~CollisionsSystem();
 	void initSystem() override;

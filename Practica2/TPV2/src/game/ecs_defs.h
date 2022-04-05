@@ -31,7 +31,7 @@
 // Handlers list - must have at least one element
 //
 #define _HDLRS_LIST_ \
-	_hdlr_BALL
+	_hdlr_FIGHTER
 
 // Systems list - must have at least one element
 //

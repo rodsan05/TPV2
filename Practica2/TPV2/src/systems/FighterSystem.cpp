@@ -23,8 +23,9 @@ FighterSystem::~FighterSystem() {
 
 void FighterSystem::initSystem() {
 	
-	// create the left paddle
 	fighter_ = mngr_->addEntity();
+
+	mngr_->setHandler(ecs::_hdlr_FIGHTER, fighter_);
 
 	fighterTr_ = mngr_->addComponent<Transform>(fighter_);
 	auto s = 50.0f;
@@ -34,15 +35,18 @@ void FighterSystem::initSystem() {
 	fighterTr_->init(Vector2D(x, y), Vector2D(),
 			s, s, 0.0f);
 
-	mngr_->addComponent<Image>(fighter_, sdlutils().images().at("fighter"));
-	mngr_->addComponent<FighterCtrl>(fighter_);
+	mngr_->addComponent<Image>(fighter_, &sdlutils().images().at("fighter"));
+	auto ctrl = mngr_->addComponent<FighterCtrl>(fighter_);
 	mngr_->addComponent<DeAcceleration>(fighter_);
 	mngr_->addComponent<Health>(fighter_);
 	mngr_->addComponent<Gun>(fighter_);
+
+	ctrl->setKeys(SDL_SCANCODE_UP, SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT);
 }
 
-void FighterSystem::recieve(const Message& m)
+void FighterSystem::receive(const Message& m)
 {
+	if (m.id == _m_GAME_START) onRoundStart();
 }
 
 void FighterSystem::update() {
@@ -77,6 +81,11 @@ void FighterSystem::moveFighter(ecs::Entity *fighter) {
 	}
 
 	fighterTr_->move();
+
+	//deacceleration
+	auto deaccel = mngr_->getComponent<DeAcceleration>(fighter);
+	if (fighterTr_->vel_.magnitude() > 0.05f) fighterTr_->vel_.set(fighterTr_->vel_ * deaccel->deaccelValue_);
+	else fighterTr_->vel_.set(Vector2D(0, 0));
 
 	//show at opposite border
 	auto& pos = fighterTr_->pos_;
