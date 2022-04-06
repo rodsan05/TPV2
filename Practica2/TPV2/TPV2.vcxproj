@@ -20,7 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\components\DeAcceleration.h" />
-    <ClInclude Include="src\components\DisableOnExit.h" />
     <ClInclude Include="src\components\FighterCtrl.h" />
     <ClInclude Include="src\components\Follow.h" />
     <ClInclude Include="src\components\Generations.h" />
@@ -55,6 +54,7 @@
     <ClInclude Include="src\sdlutils\SoundEffect.h" />
     <ClInclude Include="src\sdlutils\Texture.h" />
     <ClInclude Include="src\sdlutils\VirtualTimer.h" />
+    <ClInclude Include="src\systems\BulletSystem.h" />
     <ClInclude Include="src\systems\GameCtrlSystem.h" />
     <ClInclude Include="src\systems\FighterSystem.h" />
     <ClInclude Include="src\systems\RenderSystem.h" />
@@ -75,6 +75,7 @@
     <ClCompile Include="src\sdlutils\sdlutils_demo.cpp" />
     <ClCompile Include="src\sdlutils\SoundEffect.cpp" />
     <ClCompile Include="src\sdlutils\Texture.cpp" />
+    <ClCompile Include="src\systems\BulletSystem.cpp" />
     <ClCompile Include="src\systems\GameCtrlSystem.cpp" />
     <ClCompile Include="src\systems\FighterSystem.cpp" />
     <ClCompile Include="src\systems\RenderSystem.cpp" />

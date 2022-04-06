@@ -26,7 +26,8 @@
 // Groups list - must have at least one element
 //
 #define _GRPS_LIST_ \
-	_grp_PADDLES
+	_grp_BULLETS, \
+	_grp_ASTEROIDS
 
 // Handlers list - must have at least one element
 //
@@ -36,8 +37,8 @@
 // Systems list - must have at least one element
 //
 #define _SYS_LIST_ \
-    _sys_BALL, \
-	_sys_PADDLES, \
+    _sys_BULLET, \
+	_sys_FIGHTER, \
 	_sys_RENDER, \
 	_sys_GAMECTRL, \
 	_sys_COLLISIONS

@@ -15,7 +15,7 @@
 #include "../components/Gun.h"
 
 FighterSystem::FighterSystem() :
-		fighterTr_(nullptr) {
+		fighterTr_(nullptr), fighter_(), active_(false) {
 }
 
 FighterSystem::~FighterSystem() {

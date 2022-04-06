@@ -16,7 +16,7 @@ public:
 private:
 	void drawMsgs();
 	void drawScore();
-	void drawBall();
+	void drawBullets();
 	void drawFighter();
 };
 

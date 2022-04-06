@@ -8,6 +8,7 @@
 #include "../systems/GameCtrlSystem.h"
 #include "../systems/FighterSystem.h"
 #include "../systems/RenderSystem.h"
+#include "../systems/BulletSystem.h"
 #include "../utils/Vector2D.h"
 #include "../utils/Collisions.h"
 
@@ -17,7 +18,7 @@ Game::Game() :
 		mngr_(nullptr), //
 		fighterSys_(nullptr), //
 		gameCtrlSys_(nullptr), //
-		renderSys_(nullptr) {
+		renderSys_(nullptr), collisionsSys_(nullptr), bulletSys_(nullptr) {
 }
 
 Game::~Game() {
@@ -38,7 +39,7 @@ void Game::init() {
 	fighterSys_ = mngr_->addSystem<FighterSystem>();
 	gameCtrlSys_ = mngr_->addSystem<GameCtrlSystem>();
 	renderSys_ = mngr_->addSystem<RenderSystem>();
-
+	bulletSys_ = mngr_->addSystem<BulletSystem>();
 }
 
 void Game::start() {
@@ -63,6 +64,7 @@ void Game::start() {
 
 		fighterSys_->update();
 		gameCtrlSys_->update();
+		bulletSys_->update();
 
 		sdlutils().clearRenderer();
 		renderSys_->update();

@@ -13,7 +13,7 @@ class Vector2D;
 class FighterSystem: public ecs::System {
 public:
 
-	__SYSID_DECL__(ecs::_sys_PADDLES)
+	__SYSID_DECL__(ecs::_sys_FIGHTER)
 
 	FighterSystem();
 	virtual ~FighterSystem();
@@ -23,7 +23,10 @@ public:
 	void initSystem() override;
 
 private:
+
 	void moveFighter(ecs::Entity*);
+
+	void checkShootInput();
 
 	void onCollision_FighterAsteroid();
 

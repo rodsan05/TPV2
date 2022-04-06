@@ -12,7 +12,7 @@ class FighterSystem;
 class GameCtrlSystem;
 class CollisionsSystem;
 class RenderSystem;
-
+class BulletSystem;
 
 class Game {
 public:
@@ -27,5 +27,6 @@ private:
 	GameCtrlSystem *gameCtrlSys_;
 	CollisionsSystem *collisionsSys_;
 	RenderSystem *renderSys_;
+	BulletSystem* bulletSys_;
 };
 

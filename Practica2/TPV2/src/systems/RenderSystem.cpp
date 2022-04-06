@@ -24,7 +24,7 @@ void RenderSystem::initSystem() {
 void RenderSystem::update() {
 	drawMsgs();
 	drawScore();
-	drawBall();
+	drawBullets();
 	drawFighter();
 }
 
@@ -67,8 +67,19 @@ void RenderSystem::drawScore() {
 
 }
 
-void RenderSystem::drawBall() {
+void RenderSystem::drawBullets() {
 	
+	for (auto b : mngr_->getEntities(ecs::_grp_BULLETS)) {
+
+		auto bulletTr_ = mngr_->getComponent<Transform>(b);
+
+		SDL_Rect dest = build_sdlrect(bulletTr_->pos_, bulletTr_->width_, bulletTr_->height_);
+
+		auto img = mngr_->getComponent<Image>(b);
+
+		assert(img->tex_ != nullptr);
+		img->tex_->render(dest, bulletTr_->rot_);
+	}
 }
 
 void RenderSystem::drawFighter() {
