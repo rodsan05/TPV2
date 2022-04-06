@@ -91,6 +91,8 @@ void BulletSystem::checkShootInput()
 
 			shoot(fighterTr_->pos_, fighterTr_->vel_, fighterTr_->width_, fighterTr_->height_);
 			bulletTimer_.reset();
+
+			sdlutils().soundEffects().at("fire").play();
 		}
 	}
 }
