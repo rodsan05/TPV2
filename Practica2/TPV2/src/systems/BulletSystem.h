@@ -45,11 +45,13 @@ private:
 
 	void checkShootInput();
 
+	void destroyAllBullets();
+
 	bool active_;
 
 	ecs::Entity* fighter_;
 	Transform* fighterTr_;
 
-	VirtualTimer bulletTimer_;
+	VirtualTimer bulletsTimer_;
 };
 

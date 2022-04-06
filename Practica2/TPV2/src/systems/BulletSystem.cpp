@@ -10,11 +10,12 @@
 
 void BulletSystem::receive(const Message& m)
 {
-	if (m.id == _m_GAME_START) onRoundStart();
-	else if (m.id == _m_GAME_OVER) onRoundOver();
+	if (m.id == _m_GAME_START || m.id == _m_ROUND_START) onRoundStart();
+	else if (m.id == _m_GAME_OVER || m.id == _m_ROUND_OVER) onRoundOver();
+	else if (m.id == _m_BULLET_HIT_ASTEROID) onCollision_BulletAsteroid(m.collision_bullet_fighter.bullet);
 }
 
-BulletSystem::BulletSystem() : fighterTr_(), fighter_(), bulletTimer_(), active_(false){
+BulletSystem::BulletSystem() : fighterTr_(), fighter_(), bulletsTimer_(), active_(false){
 }
 
 BulletSystem::~BulletSystem() {
@@ -69,11 +70,13 @@ void BulletSystem::shoot(Vector2D pos, Vector2D vel, double width, double height
 
 void BulletSystem::onCollision_BulletAsteroid(ecs::Entity* b)
 {
+	mngr_->setAlive(b, false);
 }
 
 void BulletSystem::onRoundOver()
 {
 	active_ = false;
+	destroyAllBullets();
 }
 
 void BulletSystem::onRoundStart()
@@ -87,12 +90,20 @@ void BulletSystem::checkShootInput()
 
 	if (ihdlr.keyDownEvent()) {
 
-		if (ihdlr.isKeyDown(SDL_SCANCODE_S) && bulletTimer_.currTime() >= TIME_BETWEEN_SHOTS) {
+		if (ihdlr.isKeyDown(SDL_SCANCODE_S) && bulletsTimer_.currTime() >= TIME_BETWEEN_SHOTS) {
 
 			shoot(fighterTr_->pos_, fighterTr_->vel_, fighterTr_->width_, fighterTr_->height_);
-			bulletTimer_.reset();
+			bulletsTimer_.reset();
 
 			sdlutils().soundEffects().at("fire").play();
 		}
+	}
+}
+
+void BulletSystem::destroyAllBullets()
+{
+	for (auto b : mngr_->getEntities(ecs::_grp_BULLETS)) {
+	
+		mngr_->setAlive(b, false);
 	}
 }

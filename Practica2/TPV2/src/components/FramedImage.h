@@ -1,29 +1,28 @@
 #pragma once
 #include "../ecs/Component.h"
+#include <cassert>
 
-class Transform;
+struct Transform;
 class Texture;
 
-class FramedImage : public ecs::Component
+struct FramedImage : public ecs::Component
 {
-public:
-
 	__CMPID_DECL__(ecs::_IMAGE)
 
-	FramedImage();
-	FramedImage(Texture* text, int rows_, int columns, int timeBetweenFrames, int nFrames, int frame = 0);
-	~FramedImage();
+	FramedImage(Texture* text, int rows_, int columns, int timeBetweenFrames, int nFrames, int frame = 0) : text_(text), currentFrame_(frame),
+		columns_(columns), rows_(rows_), timeBetweenFrames_(timeBetweenFrames), lastTimeFrameChanged_(0), nFrames_(nFrames) {
+	
+		assert(text_ != nullptr);
+
+		frameHeight_ = text->height() / rows_;
+		frameWidth_ = text->width() / columns_;
+	};
+	virtual ~FramedImage() {};
 
 	void setTexture(Texture* text) {
 		text_ = text;
 	}
 
-	void initComponent() override;
-	void render() override;
-	void update() override;
-
-private:
-	Transform* tr_;
 	Texture* text_;
 
 	float frameHeight_;

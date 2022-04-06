@@ -20,7 +20,7 @@ public:
 	}
 
 	void update() override;
-	void receive(const Message&) override;
+	void receive(const Message& m) override;
 	void initSystem() override;
 
 private:

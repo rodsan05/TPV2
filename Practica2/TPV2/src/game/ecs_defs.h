@@ -38,6 +38,7 @@
 //
 #define _SYS_LIST_ \
     _sys_BULLET, \
+    _sys_ASTEROIDS, \
 	_sys_FIGHTER, \
 	_sys_RENDER, \
 	_sys_GAMECTRL, \

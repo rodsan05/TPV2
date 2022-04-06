@@ -26,12 +26,13 @@ private:
 
 	void moveFighter(ecs::Entity*);
 
-	void checkShootInput();
+	void returnToCenter();
 
 	void onCollision_FighterAsteroid();
 
 	void onRoundOver();
 	void onRoundStart();
+	void onGameOver();
 
 	bool active_;
 

@@ -10,13 +10,13 @@ public:
 
 	__SYSID_DECL__(ecs::_sys_COLLISIONS)
 
-	void receive(const Message&) override;
+	void receive(const Message& m) override;
 	CollisionsSystem();
 	virtual ~CollisionsSystem();
 	void initSystem() override;
 	void update() override;
 private:
-	Transform *ballTr_;
+	Transform *fighterTr_;
 	bool active_;
 };
 

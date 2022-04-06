@@ -4,6 +4,7 @@
 
 #include <cstdint>
 #include "../ecs/ecs.h"
+#include <SDL_stdinc.h>
 
 using msgId_type = uint8_t;
 enum msgId : msgId_type {
@@ -12,8 +13,8 @@ enum msgId : msgId_type {
 	_m_GAME_START, //
 	_m_GAME_OVER, //
 	_m_NEW_GAME, //
-	_m_CONTINUE, //
-	_m_BALL_HIT_PADDLE
+	_m_BULLET_HIT_ASTEROID, //
+	_m_ASTEROID_HIT_FIGHTER
 };
 
 
@@ -23,13 +24,13 @@ struct Message {
 	union {
 
 		struct {
-			uint8_t winner_;
-			uint8_t state_;
-		} state_change_;
+			ecs::Entity* asteroid;
+			ecs::Entity* bullet;
+		} collision_bullet_fighter;
 
 		struct {
-			ecs::Entity *e;
-		} ball_hit_paddle;
+			Uint8 winner_;
+		} game_over_info;
 
 	};
 };
