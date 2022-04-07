@@ -66,6 +66,7 @@ void BulletSystem::shoot(Vector2D pos, Vector2D vel, double width, double height
 	tr->init(posB, bVel, BULLET_HEIGHT, BULLET_WIDTH, fighterTr_->rot_);
 
 	mngr_->addComponent<Image>(bullet, &sdlutils().images().at("fire"));
+	sdlutils().soundEffects().at("fire").setVolume(10);
 }
 
 void BulletSystem::onCollision_BulletAsteroid(ecs::Entity* b)
@@ -90,6 +91,7 @@ void BulletSystem::checkShootInput()
 
 	if (ihdlr.keyDownEvent()) {
 
+		//como no hemos implementado GunSystem por separado no hace falta mandar un mensaje, se puede llamar directamente a shoot
 		if (ihdlr.isKeyDown(SDL_SCANCODE_S) && bulletsTimer_.currTime() >= TIME_BETWEEN_SHOTS) {
 
 			shoot(fighterTr_->pos_, fighterTr_->vel_, fighterTr_->width_, fighterTr_->height_);

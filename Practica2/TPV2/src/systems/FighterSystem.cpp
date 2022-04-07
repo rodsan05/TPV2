@@ -78,6 +78,9 @@ void FighterSystem::moveFighter(ecs::Entity *fighter) {
 			if (newVel.magnitude() > fighterCtrl->speedLimit_) newVel = newVel.normalize() * fighterCtrl->speedLimit_;
 
 			fighterTr_->vel_ = newVel;;
+
+			sdlutils().soundEffects().at("thrust").play();
+			sdlutils().soundEffects().at("thrust").setVolume(10);
 		}
 	}
 
@@ -118,6 +121,7 @@ void FighterSystem::onCollision_FighterAsteroid()
 	health->doDamage(1);
 
 	sdlutils().soundEffects().at("explosion").play();
+	sdlutils().soundEffects().at("explosion").setVolume(10);
 
 	if (health->lives > 0) {
 	
