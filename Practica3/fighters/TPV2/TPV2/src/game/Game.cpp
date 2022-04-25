@@ -33,14 +33,20 @@ Game::~Game() {
 	delete mngr_;
 }
 
-void Game::init() {
+bool Game::init() {
+
+	// Create the manager
+	mngr_ = new Manager();
+
+	netSys_ = mngr_->addSystem<NetworkSystem>();
+
+	if (!netSys_->connect()) {
+		return false;
+	}
 
 	// initialise the SDLUtils singleton
 	SDLUtils::init("Fighters", 800, 600,
 			"resources/config/fighters.resources.json");
-
-	// Create the manager
-	mngr_ = new Manager();
 
 	// add the systems
 	fightersSys_ = mngr_->addSystem<FightersSystem>();
@@ -49,6 +55,8 @@ void Game::init() {
 	renderSys_ = mngr_->addSystem<RenderSystem>();
 	collisionSys_ = mngr_->addSystem<CollisionsSystem>();
 	netSys_ = mngr_->addSystem<NetworkSystem>();
+
+	return true;
 }
 
 void Game::start() {
@@ -65,10 +73,10 @@ void Game::start() {
 		ihdlr.refresh();
 
 		if (ihdlr.isKeyDown(SDL_SCANCODE_ESCAPE)) {
+			netSys_->disconnect();
 			exit = true;
 			continue;
 		}
-
 
 		fightersSys_->update();
 		bulletsSys_->update();

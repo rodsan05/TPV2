@@ -4,11 +4,12 @@
 
 #include "../ecs/ecs.h"
 
+class NetworkSystem;
 class Game {
 public:
 	Game();
 	virtual ~Game();
-	void init();
+	bool init();
 	void start();
 private:
 	ecs::Manager *mngr_;
@@ -17,6 +18,6 @@ private:
 	ecs::System *gameCtrlSys_;
 	ecs::System *collisionSys_;
 	ecs::System *renderSys_;
-	ecs::System* netSys_;
+	NetworkSystem* netSys_;
 };
 

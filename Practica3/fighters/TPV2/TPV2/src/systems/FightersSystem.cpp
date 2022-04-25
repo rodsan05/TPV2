@@ -65,7 +65,7 @@ void FightersSystem::initSystem() {
 			SDL_SCANCODE_DOWN, //
 			SDL_SCANCODE_LEFT, //
 			SDL_SCANCODE_RIGHT, //
-			SDL_SCANCODE_RETURN);
+			SDL_SCANCODE_S);
 
 	// Fighter 1
 	//
@@ -86,13 +86,6 @@ void FightersSystem::initSystem() {
 	mngr_->addComponent<Image>(fighter1, //
 			&sdlutils().images().at("airplanes"), //
 			build_sdlrect(805.0f, 125.0f, 310.0f, 165.0f)); //
-
-	mngr_->addComponent<CtrlKeys>(fighter1, //
-			SDL_SCANCODE_W, //
-			SDL_SCANCODE_S, //
-			SDL_SCANCODE_H, //
-			SDL_SCANCODE_L, //
-			SDL_SCANCODE_D);
 
 	if (side_ == 0) 
 	{
