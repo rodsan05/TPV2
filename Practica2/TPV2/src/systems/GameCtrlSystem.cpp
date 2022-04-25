@@ -21,32 +21,44 @@ void GameCtrlSystem::update() {
 
 		if (inhdlr.isKeyDown(SDL_SCANCODE_SPACE)) {
 			
+			Message m;
+
 			if (state_ == 0) {
-				
-				Message m;
+			
 				m.id = _m_GAME_START;
-				mngr_->send(m);
+				state_ = 1;
 			}
+
 			else if (state_ == 2) {
 
-				Message m;
-				m.id = _m_CONTINUE;
-				mngr_->send(m);
-			}
-			else if (state_ == 3) {
-			
-				Message m;
 				m.id = _m_ROUND_START;
-				mngr_->send(m);
+				state_ = 1;
+			}
+			else {
+
+				m.id = _m_NEW_GAME;
+				state_ = 0;
 			}
 
-			state_ = 1;
+			mngr_->send(m);
 		}
 	}
 }
 
-void GameCtrlSystem::receive(const Message&)
+void GameCtrlSystem::receive(const Message& m)
 {
+	switch (m.id)
+	{
+	case _m_ROUND_OVER:
+		state_ = 2;
+		break;
+	case _m_GAME_OVER:
+		state_ = 3;
+		winner_ = m.game_over_info.winner_;
+		break;
+	default:
+		break;
+	}
 }
 
 void GameCtrlSystem::initSystem()

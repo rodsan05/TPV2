@@ -7,7 +7,7 @@ struct FighterCtrl: public ecs::Component {
 
 	__CMPID_DECL__(ecs::_FIGHTERCTRL)
 
-	FighterCtrl() {}
+	FighterCtrl() : up_(SDL_SCANCODE_UP), left_(SDL_SCANCODE_LEFT), right_(SDL_SCANCODE_RIGHT) {}
 	virtual ~FighterCtrl() {}
 
 	inline void setKeys(SDL_Scancode up, SDL_Scancode left, SDL_Scancode right) {

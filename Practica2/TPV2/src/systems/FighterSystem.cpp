@@ -15,7 +15,7 @@
 #include "../components/Gun.h"
 
 FighterSystem::FighterSystem() :
-		fighterTr_(nullptr) {
+		fighterTr_(nullptr), fighter_(), active_(false) {
 }
 
 FighterSystem::~FighterSystem() {
@@ -40,13 +40,14 @@ void FighterSystem::initSystem() {
 	mngr_->addComponent<DeAcceleration>(fighter_);
 	mngr_->addComponent<Health>(fighter_);
 	mngr_->addComponent<Gun>(fighter_);
-
-	ctrl->setKeys(SDL_SCANCODE_UP, SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT);
 }
 
 void FighterSystem::receive(const Message& m)
 {
-	if (m.id == _m_GAME_START) onRoundStart();
+	if (m.id == _m_GAME_START || m.id == _m_ROUND_START) onRoundStart();
+	else if (m.id == _m_ROUND_OVER) onRoundOver();
+	else if (m.id == _m_GAME_OVER) onGameOver();
+	else if (m.id == _m_ASTEROID_HIT_FIGHTER) onCollision_FighterAsteroid();
 }
 
 void FighterSystem::update() {
@@ -77,6 +78,9 @@ void FighterSystem::moveFighter(ecs::Entity *fighter) {
 			if (newVel.magnitude() > fighterCtrl->speedLimit_) newVel = newVel.normalize() * fighterCtrl->speedLimit_;
 
 			fighterTr_->vel_ = newVel;;
+
+			sdlutils().soundEffects().at("thrust").play();
+			sdlutils().soundEffects().at("thrust").setVolume(10);
 		}
 	}
 
@@ -99,17 +103,60 @@ void FighterSystem::moveFighter(ecs::Entity *fighter) {
 	else if (pos.getY() + fighterTr_->height_ < 0) pos.set(Vector2D(pos.getX(), height));
 }
 
+void FighterSystem::returnToCenter()
+{
+	auto s = fighterTr_->width_;
+	auto x = (sdlutils().width() - s) / 2.0f;
+	auto y = (sdlutils().height() - s) / 2.0f;
+
+	fighterTr_->pos_ = Vector2D(x, y);
+	fighterTr_->rot_ = 0;
+	fighterTr_->vel_ = Vector2D(0, 0);
+}
+
 void FighterSystem::onCollision_FighterAsteroid()
 {
+	auto health = mngr_->getComponent<Health>(fighter_);
+
+	health->doDamage(1);
+
+	sdlutils().soundEffects().at("explosion").play();
+	sdlutils().soundEffects().at("explosion").setVolume(10);
+
+	if (health->lives > 0) {
+	
+		Message m;
+		m.id = _m_ROUND_OVER;
+		mngr_->send(m);
+	}
+
+	else {
+	
+		Message m;
+		m.id = _m_GAME_OVER;
+		mngr_->send(m);
+	}
 }
 
 void FighterSystem::onRoundOver()
 {
 	active_ = false;
+
+	returnToCenter();
 }
 
 void FighterSystem::onRoundStart()
 {
 	active_ = true;
+}
+
+void FighterSystem::onGameOver()
+{
+	active_ = false;
+
+	auto health = mngr_->getComponent<Health>(fighter_);
+	health->resetLives();
+
+	returnToCenter();
 }
 

@@ -12,9 +12,3 @@ struct DeAcceleration : public ecs::Component
 	float deaccelValue_;
 };
 
-//void DeAcceleration::update()
-//{
-//	if (tr_->getVel().magnitude() > 0.05f) tr_->getVel().set(tr_->getVel() * deaccelValue_);
-//	else tr_->getVel().set(Vector2D(0, 0));
-//}
-

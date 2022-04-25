@@ -8,6 +8,9 @@
 #include "../systems/GameCtrlSystem.h"
 #include "../systems/FighterSystem.h"
 #include "../systems/RenderSystem.h"
+#include "../systems/BulletSystem.h"
+#include "../systems/AsteroidsSystem.h"
+#include "../systems/CollisionsSystem.h"
 #include "../utils/Vector2D.h"
 #include "../utils/Collisions.h"
 
@@ -17,7 +20,7 @@ Game::Game() :
 		mngr_(nullptr), //
 		fighterSys_(nullptr), //
 		gameCtrlSys_(nullptr), //
-		renderSys_(nullptr) {
+		renderSys_(nullptr), collisionsSys_(nullptr), bulletSys_(nullptr), asteroidsSys_(nullptr) {
 }
 
 Game::~Game() {
@@ -27,7 +30,7 @@ Game::~Game() {
 void Game::init() {
 
 	// Initialize the SDLUtils singleton
-	SDLUtils::init("Ping Pong", 800, 600,
+	SDLUtils::init("Asteroid", 800, 600,
 			"resources/config/asteroid.resources.json");
 
 	sdlutils().hideCursor();
@@ -38,7 +41,12 @@ void Game::init() {
 	fighterSys_ = mngr_->addSystem<FighterSystem>();
 	gameCtrlSys_ = mngr_->addSystem<GameCtrlSystem>();
 	renderSys_ = mngr_->addSystem<RenderSystem>();
+	bulletSys_ = mngr_->addSystem<BulletSystem>();
+	asteroidsSys_ = mngr_->addSystem<AsteroidsSystem>();
+	collisionsSys_ = mngr_->addSystem<CollisionsSystem>();
 
+	bool systems = fighterSys_ != nullptr && gameCtrlSys_ != nullptr && renderSys_ != nullptr && bulletSys_ != nullptr && asteroidsSys_ != nullptr;
+	assert(systems);
 }
 
 void Game::start() {
@@ -63,10 +71,14 @@ void Game::start() {
 
 		fighterSys_->update();
 		gameCtrlSys_->update();
+		bulletSys_->update();
+		asteroidsSys_->update();
 
 		sdlutils().clearRenderer();
 		renderSys_->update();
 		sdlutils().presentRenderer();
+
+		collisionsSys_->update();
 
 		Uint32 frameTime = sdlutils().currRealTime() - startTime;
 
