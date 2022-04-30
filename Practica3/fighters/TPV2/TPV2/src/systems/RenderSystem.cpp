@@ -12,6 +12,7 @@
 #include "../sdlutils/SDLUtils.h"
 #include "../sdlutils/Texture.h"
 #include "GameCtrlSystem.h"
+#include "NetworkSystem.h"
 
 RenderSystem::RenderSystem() :
 		running_(false), over_(false), killedId_() {
@@ -47,7 +48,13 @@ void RenderSystem::initSystem() {
 }
 
 void RenderSystem::update() {
-	drawMsgs();
+	
+	if (mngr_->getSystem<NetworkSystem>()->isReday()) {
+		drawMsgs();
+	}
+	else {
+		drawWaitingMsg();
+	}
 	if (running_) {
 		drawFighters();
 		drawBullets();
@@ -177,5 +184,22 @@ void RenderSystem::drawBox(ecs::Entity *e) {
 	 vel = vel * wh / 2.0f;
 	 SDL_RenderDrawLine(renderer, x, y, vel.getX() + x, vel.getY() + y);
 	 */
+}
+
+void RenderSystem::drawWaitingMsg() {
+	auto port = mngr_->getSystem<NetworkSystem>()->getPort();
+
+	Texture waiting(
+		sdlutils().renderer(), //
+		"Waiting for the other to connect ...",
+		sdlutils().fonts().at("ARIAL16"), build_sdlcolor(0xccddaaaff));
+	waiting.render((sdlutils().width() - waiting.width()) / 2, 10);
+
+	Texture portmsg(
+		sdlutils().renderer(), //
+		"Your are connected at port " + std::to_string(port),
+		sdlutils().fonts().at("ARIAL16"), build_sdlcolor(0x1155aaff));
+	portmsg.render((sdlutils().width() - portmsg.width()) / 2,
+		waiting.height() + 30);
 }
 

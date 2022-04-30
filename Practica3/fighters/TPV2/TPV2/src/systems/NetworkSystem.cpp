@@ -111,11 +111,8 @@ void NetworkSystem::update() {
 		case net::_FIGHTER_VEL:
 			handleFighterPos();
 			break;
-			case net::_BULLET_POS:
-			handleBulletsPos();
-			break;
-		case net::_BULLETS_VEL:
-			handleBulletsVel();
+		case net::_CREATE_BULLET:
+			handleCreateBullet();
 			break;
 		case net::_START_GAME_REQUEST:
 			handleStartGameRequest();
@@ -248,30 +245,19 @@ void NetworkSystem::sendFighterPosition(Transform *tr) {
 	SDLNetUtils::serializedSend(m, p_, sock_, otherPlayerAddr_);
 }
 
-void NetworkSystem::sendBulletPosition(Transform *tr) {
+void NetworkSystem::sendNewBullet(float posX, float posY, float rot, float velX, float velY)
+{
 	if (!connected_)
 		return;
 
-	net::BulletPosMsg m;
-	m.id = net::_BULLET_POS;
+	net::BulletCreationMsg m;
+	m.id = net::_CREATE_BULLET;
 	m.side = side_;
-	m.x = tr->pos_.getX();
-	m.y = tr->pos_.getY();
-	m.rot = tr->rot_;
-	p_->address = otherPlayerAddr_;
-	SDLNetUtils::serializedSend(m, p_, sock_, otherPlayerAddr_);
-}
-
-void NetworkSystem::sendBallVelocity(Transform *tr) {
-	if (!connected_ || !host_)
-		return;
-
-	net::BulletVelMsg m;
-	m.id = net::_BULLETS_VEL;
-	m.side = side_;
-	m.x = tr->vel_.getX();
-	m.y = tr->vel_.getY();
-
+	m.posX = posX;
+	m.posY = posY;
+	m.rot = rot;
+	m.velX = velX;
+	m.velY = velY;
 	p_->address = otherPlayerAddr_;
 	SDLNetUtils::serializedSend(m, p_, sock_, otherPlayerAddr_);
 }
@@ -303,25 +289,17 @@ void NetworkSystem::sendStarGameRequest() {
 void NetworkSystem::handleFighterPos() {
 	net::FighterPosMsg m;
 	m.deserialize(p_->data);
-	mngr_->getSystem<FightersSystem>();
+	mngr_->getSystem<FightersSystem>()->setOtherFighterPos(m.x, m.y, m.rot);
 }
 
 void NetworkSystem::handleFighterVel()
 {
 }
 
-void NetworkSystem::handleBulletsPos() {
-	assert(!host_);
-	net::BulletPosMsg m;
+void NetworkSystem::handleCreateBullet() {
+	net::BulletCreationMsg m;
 	m.deserialize(p_->data);
-	mngr_->getSystem<BulletsSystem>();
-}
-
-void NetworkSystem::handleBulletsVel() {
-	assert(!host_);
-	net::BulletVelMsg m;
-	m.deserialize(p_->data);
-	mngr_->getSystem<BulletsSystem>();
+	mngr_->getSystem<BulletsSystem>()->createNewBullet(m.posX, m.posY, m.rot, m.velX, m.velY);
 }
 
 void NetworkSystem::handleStartGameRequest() {

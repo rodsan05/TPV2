@@ -8,6 +8,7 @@
 #include "../game/messages_defs.h"
 #include "../sdlutils/SDLUtils.h"
 #include "../utils/Vector2D.h"
+#include "NetworkSystem.h"
 
 BulletsSystem::BulletsSystem() :
 		running_(false) {
@@ -79,6 +80,9 @@ void BulletsSystem::handleShoot(const Message &m) {
 	mngr_->addComponent<Image>(b, &sdlutils().images().at("fire"));
 
 	sdlutils().soundEffects().at("gunshot").play();
+
+	auto netSys = mngr_->getSystem<NetworkSystem>();
+	netSys->sendNewBullet(pos.getX(), pos.getY(), rot, vel.getX(), vel.getY());
 }
 
 void BulletsSystem::handleGameOver(const Message&) {
@@ -90,4 +94,27 @@ void BulletsSystem::handleGameOver(const Message&) {
 
 void BulletsSystem::handleGameStart(const Message&) {
 	running_ = true;
+}
+
+void BulletsSystem::createNewBullet(float posX, float posY, float rot, float velX, float velY)
+{
+	ecs::Entity* b = mngr_->addEntity(ecs::_grp_BULLETS);
+
+	// the bottom/center of the bullet
+	Vector2D pos = Vector2D(posX, posY);
+
+	// the velocity of the bullet
+	Vector2D vel = Vector2D(velX, velY);
+
+	float bh = 18.0f;
+	float bw = 6.f;
+
+	// left/top corner of the bullet
+	Vector2D bPos = pos + vel.normalize() * (bh / 2.0f)
+		- Vector2D(bw / 2.0f, bh / 2.0);
+
+	mngr_->addComponent<Transform>(b, bPos, vel, bw, bh, rot);
+	mngr_->addComponent<Image>(b, &sdlutils().images().at("fire"));
+
+	sdlutils().soundEffects().at("gunshot").play();
 }

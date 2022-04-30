@@ -12,8 +12,7 @@ enum MsgId : Uint8 {
 	_REQUEST_REFUSED, //
 	_FIGHTER_POS, //
 	_FIGHTER_VEL, //
-	_BULLET_POS, //
-	_BULLETS_VEL, //
+	_CREATE_BULLET, //
 	_START_GAME_REQUEST, //
 	_START_THE_GAME, //
 	_GAME_OVER_REQUEST, //
@@ -48,25 +47,17 @@ struct FighterPosMsg: Message {
 	_IMPL_SERIALIAZION_WITH_BASE_(Message,side,x,y,rot)
 };
 
-struct BulletPosMsg: Message {
+struct BulletCreationMsg: Message {
 
 	Uint8 side;
-	float x;
-	float y;
+	float posX;
+	float posY;
 	float rot;
+	float velX;
+	float velY;
 
 	//
-	_IMPL_SERIALIAZION_WITH_BASE_(Message,side,x,y)
-};
-
-struct BulletVelMsg: Message {
-
-	Uint8 side;
-	float x;
-	float y;
-
-	//
-	_IMPL_SERIALIAZION_WITH_BASE_(Message,side,x,y)
+	_IMPL_SERIALIAZION_WITH_BASE_(Message,side,posX,posY,rot,velX,velY)
 };
 
 struct StartRequestMsg: Message {

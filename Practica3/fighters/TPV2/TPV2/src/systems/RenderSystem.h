@@ -30,6 +30,7 @@ private:
 	void handleGameStart(const Message&);
 	void handleGameOver(const Message&);
 	void drawBox(ecs::Entity *e);
+	void drawWaitingMsg();
 
 	bool running_;
 	bool over_;

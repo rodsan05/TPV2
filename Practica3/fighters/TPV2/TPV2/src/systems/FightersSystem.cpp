@@ -42,6 +42,9 @@ void FightersSystem::initSystem() {
 	auto h = 50.0f;
 	auto w = 50.0f;
 
+	auto netSys = mngr_->getSystem<NetworkSystem>();
+	side_ = netSys->getSide();
+
 	// Fighter 0
 	//
 	auto fighter0 = mngr_->addEntity(ecs::_grp_FIGHTERS);
@@ -60,12 +63,13 @@ void FightersSystem::initSystem() {
 			&sdlutils().images().at("airplanes"), //
 			build_sdlrect(45.0f, 90.0f, 205.0f, 245.0f));
 
+
 	mngr_->addComponent<CtrlKeys>(fighter0, //
-			SDL_SCANCODE_UP, //
-			SDL_SCANCODE_DOWN, //
-			SDL_SCANCODE_LEFT, //
-			SDL_SCANCODE_RIGHT, //
-			SDL_SCANCODE_S);
+		SDL_SCANCODE_UP, //
+		SDL_SCANCODE_DOWN, //
+		SDL_SCANCODE_LEFT, //
+		SDL_SCANCODE_RIGHT, //
+		SDL_SCANCODE_S);
 
 	// Fighter 1
 	//
@@ -86,6 +90,13 @@ void FightersSystem::initSystem() {
 	mngr_->addComponent<Image>(fighter1, //
 			&sdlutils().images().at("airplanes"), //
 			build_sdlrect(805.0f, 125.0f, 310.0f, 165.0f)); //
+
+	mngr_->addComponent<CtrlKeys>(fighter1, //
+		SDL_SCANCODE_UP, //
+		SDL_SCANCODE_DOWN, //
+		SDL_SCANCODE_LEFT, //
+		SDL_SCANCODE_RIGHT, //
+		SDL_SCANCODE_S);
 
 	if (side_ == 0) 
 	{

@@ -54,7 +54,6 @@ bool Game::init() {
 	gameCtrlSys_ = mngr_->addSystem<GameCtrlSystem>();
 	renderSys_ = mngr_->addSystem<RenderSystem>();
 	collisionSys_ = mngr_->addSystem<CollisionsSystem>();
-	netSys_ = mngr_->addSystem<NetworkSystem>();
 
 	return true;
 }

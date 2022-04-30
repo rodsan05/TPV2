@@ -40,8 +40,7 @@ public:
 	}
 
 	void sendFighterPosition(Transform *tr);
-	void sendBulletPosition(Transform *tr);
-	void sendBallVelocity(Transform *tr);
+	void sendNewBullet(float posX, float posY, float rot, float velX, float velY);
 	void sendStarGameRequest();
 
 private:
@@ -53,8 +52,7 @@ private:
 	void handleConnectionRequest();
 	void handleFighterPos();
 	void handleFighterVel();
-	void handleBulletsPos();
-	void handleBulletsVel();
+	void handleCreateBullet();
 	void handleStartGameRequest();
 	void handleStartTheGame();
 	void handleGameOverRequest();

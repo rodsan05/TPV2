@@ -14,6 +14,8 @@ public:
 	void initSystem() override;
 	void update() override;
 
+	void createNewBullet(float posX, float posY, float rot, float velX, float velY);
+
 private:
 	void handleShoot(const Message&);
 	void handleGameOver(const Message&);
