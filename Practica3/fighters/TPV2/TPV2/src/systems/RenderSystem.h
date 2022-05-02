@@ -20,6 +20,8 @@ public:
 	void initSystem() override;
 	void update() override;
 
+	void reset();
+
 private:
 	void drawMsgs();
 	void drawFighters();
@@ -27,8 +29,8 @@ private:
 	void draw(ecs::Entity *e);
 	void drawId(ecs::Entity *e);
 
-	void handleGameStart(const Message&);
-	void handleGameOver(const Message&);
+	void handleGameStart(const Message& m);
+	void handleGameOver(const Message& m);
 	void drawBox(ecs::Entity *e);
 	void drawWaitingMsg();
 

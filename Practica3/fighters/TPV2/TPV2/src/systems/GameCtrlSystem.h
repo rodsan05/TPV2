@@ -20,9 +20,14 @@ public:
 	void update() override;
 	void recieve(const Message &m) override;
 
+	void stopTheGame();
+	void requestToStartGame();
+
 private:
 
 	void handleBulletHitFighter(const Message&);
+
+	void startGame();
 
 	uint8_t state_;
 };

@@ -12,17 +12,19 @@
 #include "network_messages.h"
 #include "FightersSystem.h"
 #include "BulletsSystem.h"
+#include "RenderSystem.h"
 
 NetworkSystem::NetworkSystem() :
-		host_(false), //
-		side_(0), //
-		sock_(), //
-		p_(), //
-		sockSet_(), //
-		port_(), //
-		connected_(false), //
-		otherPlayerAddr_() {
+	host_(false), //
+	side_(0), //
+	sock_(), //
+	p_(), //
+	sockSet_(), //
+	port_(), //
+	connected_(false), //
+	otherPlayerAddr_() {
 
+	names_ = std::vector<std::string>(2, "");
 }
 
 NetworkSystem::~NetworkSystem() {
@@ -32,19 +34,16 @@ NetworkSystem::~NetworkSystem() {
 	}
 }
 
-void NetworkSystem::recieve(const Message &m) {
+void NetworkSystem::recieve(const Message& m) {
 	if (!host_)
 		return;
 
 	switch (m.id) {
-	case _m_GAME_OVER:
-		
-		break;
 	case _m_GAME_START:
 		tellOtherClientToStartGame();
 		break;
 	case _m_BULLET_HIT_FIGHTER:
-		
+		tellOtherClientBulletHitFighter(m.killed.playerId);
 		break;
 	default:
 		break;
@@ -60,9 +59,14 @@ bool NetworkSystem::connect() {
 	bool done = false;
 	bool success = false;
 
+	do {
+		std::cout << "Enter name (10 chars)" << std::endl;
+		std::cin >> currName_;
+	} while (currName_.length() < 0 || currName_.length() > 10);
+
 	while (!done) {
 		std::cout << "Do you want to be host, client or exit [h/c/e]? "
-				<< std::endl;
+			<< std::endl;
 		std::cin >> choice;
 		switch (choice) {
 		case 'h':
@@ -120,14 +124,12 @@ void NetworkSystem::update() {
 		case net::_START_THE_GAME:
 			handleStartTheGame();
 			break;
-		case net::_GAME_OVER_REQUEST:
-			handleGameOverRequest();
-			break;
 		case net::_GAME_OVER:
-			handleGameOver();
+			handleBulletHitFighter();
 			break;
 		case net::_DISCONNECTING:
 			handleDisconnecting();
+		case net::_BULLET_HIT_FIGHTER:
 			break;
 		default:
 			break;
@@ -177,8 +179,10 @@ bool NetworkSystem::initHost() {
 	host_ = true;
 	side_ = 0;
 	connected_ = false;
-	return true;
 
+	names_[side_] = currName_;
+
+	return true;
 }
 
 bool NetworkSystem::initClient() {
@@ -187,7 +191,7 @@ bool NetworkSystem::initClient() {
 	std::string host;
 
 	std::cout << "Enter the host and port (separated by space) of the host: "
-			<< std::endl;
+		<< std::endl;
 	if (!(std::cin >> host >> port)) {
 		std::cerr << "Invalid host/port" << std::endl;
 		return false;
@@ -202,9 +206,10 @@ bool NetworkSystem::initClient() {
 
 	initConnection(0);
 
-	net::Message m;
+	net::ConnectionReqMsg m;
 
 	m.id = net::_CONNECTION_REQUEST;
+	string_to_chars(currName_, m.name);
 	p_->address = otherPlayerAddr_;
 	SDLNetUtils::serializedSend(m, p_, sock_);
 
@@ -215,6 +220,8 @@ bool NetworkSystem::initClient() {
 				net::ReqAccMsg m;
 				m.deserialize(p_->data);
 				side_ = m.side;
+				chars_to_string(names_[1 - side_], m.name);
+
 				host_ = false;
 				connected_ = true;
 			}
@@ -227,11 +234,12 @@ bool NetworkSystem::initClient() {
 		return false;
 	}
 
-	return true;
+	names_[side_] = currName_;
 
+	return true;
 }
 
-void NetworkSystem::sendFighterPosition(Transform *tr) {
+void NetworkSystem::sendFighterPosition(Transform* tr) {
 	if (!connected_)
 		return;
 
@@ -265,12 +273,22 @@ void NetworkSystem::sendNewBullet(float posX, float posY, float rot, float velX,
 void NetworkSystem::handleConnectionRequest() {
 
 	if (!connected_ && host_) {
+
+		net::ConnectionReqMsg m_;
+		m_.deserialize(p_->data);
+		chars_to_string(names_[1-side_], m_.name);
+
 		otherPlayerAddr_ = p_->address;
 		connected_ = true;
 		net::ReqAccMsg m;
 		m.id = net::_REQUEST_ACCEPTED;
 		m.side = 1 - side_;
+
+		string_to_chars(names_[side_], m.name);
+
 		SDLNetUtils::serializedSend(m, p_, sock_, otherPlayerAddr_);
+
+		mngr_->getSystem<RenderSystem>()->reset();
 	}
 }
 
@@ -284,6 +302,11 @@ void NetworkSystem::sendStarGameRequest() {
 	p_->address = otherPlayerAddr_;
 	SDLNetUtils::serializedSend(m, p_, sock_, otherPlayerAddr_);
 
+}
+
+std::string NetworkSystem::getName(int nameId)
+{
+	return names_[nameId];
 }
 
 void NetworkSystem::handleFighterPos() {
@@ -319,23 +342,18 @@ void NetworkSystem::handleStartTheGame() {
 	mngr_->send(m);
 }
 
-void NetworkSystem::handleGameOver() {
-	assert(!host_);
+void NetworkSystem::handleBulletHitFighter() {
 	Message m;
 
-	m.id = _m_GAME_OVER;
+	m.id = _m_BULLET_HIT_FIGHTER;
 
 	mngr_->send(m);
-}
-
-void NetworkSystem::handleGameOverRequest()
-{
 }
 
 void NetworkSystem::handleDisconnecting() {
 	connected_ = false;
 	host_ = true;
-	//mngr_->getSystem<GameCtrlSystem>()->stopTheGame();
+	mngr_->getSystem<GameCtrlSystem>()->stopTheGame();
 }
 
 void NetworkSystem::tellOtherClientToStartGame() {
@@ -345,12 +363,22 @@ void NetworkSystem::tellOtherClientToStartGame() {
 	SDLNetUtils::serializedSend(m, p_, sock_, otherPlayerAddr_);
 }
 
-void NetworkSystem::tellOtherClientBulletHitFighter(Uint8 winner) {
+void NetworkSystem::tellOtherClientBulletHitFighter(Uint8 killed) {
 	net::BulletHitFighterMsg m;
 
 	m.id = net::_BULLET_HIT_FIGHTER;
-	m.winner = winner;
+	m.killed = killed;
 	SDLNetUtils::serializedSend(m, p_, sock_, otherPlayerAddr_);
+}
 
+void NetworkSystem::string_to_chars(std::string& str, char c_str[11]) {
+	auto i = 0u;
+	for (; i < str.size() && i < 10; i++) c_str[i] = str[i];
+	c_str[i] = 0;
+}
+
+void NetworkSystem::chars_to_string(std::string& str, char c_str[11]) {
+	c_str[10] = 0;
+	str = std::string(c_str);
 }
 

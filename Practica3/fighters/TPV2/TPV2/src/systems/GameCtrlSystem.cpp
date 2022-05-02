@@ -6,6 +6,7 @@
 #include "../ecs/Manager.h"
 #include "../game/messages_defs.h"
 #include "../sdlutils/InputHandler.h"
+#include "NetworkSystem.h"
 
 GameCtrlSystem::GameCtrlSystem() :
 		state_(_STOPPED) {
@@ -22,12 +23,17 @@ void GameCtrlSystem::update() {
 
 	if (state_ != _RUNNING) {
 		if (ihldr.isKeyDown(SDL_SCANCODE_SPACE)) {
-			state_ = _RUNNING;
-			Message m;
-			m.id = _m_GAME_START;
-			mngr_->send(m);
+			requestToStartGame();
 		}
 	}
+}
+
+void GameCtrlSystem::startGame()
+{
+	state_ = _RUNNING;
+	Message m;
+	m.id = _m_GAME_START;
+	mngr_->send(m);
 }
 
 void GameCtrlSystem::recieve(const Message &m) {
@@ -37,6 +43,26 @@ void GameCtrlSystem::recieve(const Message &m) {
 		break;
 	default:
 		break;
+	}
+}
+
+void GameCtrlSystem::stopTheGame()
+{
+	state_ = _STOPPED;
+
+	Message msg;
+	msg.id = _m_GAME_OVER;
+	msg.killed.playerId;
+	mngr_->send(msg);
+}
+
+void GameCtrlSystem::requestToStartGame()
+{
+	if (mngr_->getSystem<NetworkSystem>()->isHost()) {
+		startGame();
+	}
+	else {
+		mngr_->getSystem<NetworkSystem>()->sendStarGameRequest();
 	}
 }
 

@@ -6,75 +6,83 @@
 
 namespace net {
 
-enum MsgId : Uint8 {
-	_CONNECTION_REQUEST, //
-	_REQUEST_ACCEPTED, //
-	_REQUEST_REFUSED, //
-	_FIGHTER_POS, //
-	_FIGHTER_VEL, //
-	_CREATE_BULLET, //
-	_START_GAME_REQUEST, //
-	_START_THE_GAME, //
-	_GAME_OVER_REQUEST, //
-	_GAME_OVER, //
-	_BULLET_HIT_FIGHTER, //
-	_DISCONNECTING
-};
+	enum MsgId : Uint8 {
+		_CONNECTION_REQUEST, //
+		_REQUEST_ACCEPTED, //
+		_REQUEST_REFUSED, //
+		_FIGHTER_POS, //
+		_FIGHTER_VEL, //
+		_CREATE_BULLET, //
+		_START_GAME_REQUEST, //
+		_START_THE_GAME, //
+		_GAME_OVER, //
+		_BULLET_HIT_FIGHTER, //
+		_DISCONNECTING
+	};
 
-struct Message {
-	Uint8 id;
+	struct Message {
+		Uint8 id;
 
-	//
-	_IMPL_SERIALIAZION_(id)
-};
+		//
+		_IMPL_SERIALIAZION_(id)
+	};
 
-struct ReqAccMsg: Message {
+	struct ReqAccMsg : Message {
 
-	Uint8 side;
+		Uint8 side;
+		char name[11];
 
-	//
-	_IMPL_SERIALIAZION_WITH_BASE_(Message,side)
-};
+		//
+		_IMPL_SERIALIAZION_WITH_BASE_(Message, side, name)
+	};
 
-struct FighterPosMsg: Message {
+	struct ConnectionReqMsg : Message {
 
-	Uint8 side;
-	float x;
-	float y;
-	float rot;
+		char name[11];
 
-	//
-	_IMPL_SERIALIAZION_WITH_BASE_(Message,side,x,y,rot)
-};
+		//
+		_IMPL_SERIALIAZION_WITH_BASE_(Message, name)
+	};
 
-struct BulletCreationMsg: Message {
+	struct FighterPosMsg : Message {
 
-	Uint8 side;
-	float posX;
-	float posY;
-	float rot;
-	float velX;
-	float velY;
+		Uint8 side;
+		float x;
+		float y;
+		float rot;
 
-	//
-	_IMPL_SERIALIAZION_WITH_BASE_(Message,side,posX,posY,rot,velX,velY)
-};
+		//
+		_IMPL_SERIALIAZION_WITH_BASE_(Message, side, x, y, rot)
+	};
 
-struct StartRequestMsg: Message {
+	struct BulletCreationMsg : Message {
 
-	Uint8 side;
+		Uint8 side;
+		float posX;
+		float posY;
+		float rot;
+		float velX;
+		float velY;
 
-	//
-	_IMPL_SERIALIAZION_WITH_BASE_(Message,side)
-};
+		//
+		_IMPL_SERIALIAZION_WITH_BASE_(Message, side, posX, posY, rot, velX, velY)
+	};
 
-struct BulletHitFighterMsg: Message {
+	struct StartRequestMsg : Message {
 
-	Uint8 winner;
+		Uint8 side;
 
-	//
-	_IMPL_SERIALIAZION_WITH_BASE_(Message,winner)
-};
+		//
+		_IMPL_SERIALIAZION_WITH_BASE_(Message, side)
+	};
+
+	struct BulletHitFighterMsg : Message {
+
+		Uint8 killed;
+
+		//
+		_IMPL_SERIALIAZION_WITH_BASE_(Message, killed)
+	};
 
 }
 

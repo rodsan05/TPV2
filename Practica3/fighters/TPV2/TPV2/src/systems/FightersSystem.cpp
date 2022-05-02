@@ -217,11 +217,18 @@ void FightersSystem::handleGameStart(const Message&) {
 void FightersSystem::handleGameOver(const Message&) {
 	
 	int dir;
-	if (side_ == 0) dir = 1;
-	else dir = -1;
+	if (side_ == 0) {
 
+		dir = 1;
+		tr_->pos_ = Vector2D(10.0f, (sdlutils().height() - tr_->height_) / 2.0f);
+	}
+	else {
+	
+		dir = -1;
+		tr_->pos_ = Vector2D(sdlutils().width() - 10.0f - tr_->width_, (sdlutils().height() - tr_->height_) / 2.0f);
+	}
 	running_ = false;
-	tr_->pos_ = Vector2D(10.0f, (sdlutils().height() - tr_->height_) / 2.0f);
+	
 	tr_->vel_ = Vector2D();
 	tr_->rot_ = 90.0f * dir;
 }

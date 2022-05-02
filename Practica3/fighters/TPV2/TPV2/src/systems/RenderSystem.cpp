@@ -34,14 +34,16 @@ void RenderSystem::recieve(const Message &m) {
 	}
 }
 
-void RenderSystem::handleGameStart(const Message&) {
+void RenderSystem::handleGameStart(const Message& m) {
 	running_ = true;
 	over_ = false;
 }
 
-void RenderSystem::handleGameOver(const Message&) {
+void RenderSystem::handleGameOver(const Message& m) {
 	running_ = false;
 	over_ = true;
+
+	killedId_ = m.killed.playerId;
 }
 
 void RenderSystem::initSystem() {
@@ -61,6 +63,11 @@ void RenderSystem::update() {
 	}
 }
 
+void RenderSystem::reset()
+{
+	over_ = false;
+}
+
 void RenderSystem::drawMsgs() {
 	if (!running_) {
 
@@ -73,8 +80,13 @@ void RenderSystem::drawMsgs() {
 			gameOverMsg.render((sdlutils().width() - gameOverMsg.width()) / 2,
 					20);
 
+			auto id = killedId_;
+			auto netSys = mngr_->getSystem<NetworkSystem>();
+
+			std::string tag = netSys->getName(id);
+
 			Texture winnerMsg(sdlutils().renderer(), //
-					"Player " + std::to_string(killedId_) + " has been shot!", //
+					tag + " has been shot!", //
 					sdlutils().fonts().at("ARIAL24"), //
 					build_sdlcolor(0xffAA44ff));
 
@@ -87,11 +99,17 @@ void RenderSystem::drawMsgs() {
 }
 
 void RenderSystem::drawFighters() {
-	for (ecs::Entity *e : mngr_->getEntities(ecs::_grp_FIGHTERS)) {
+	
+	auto fighters = mngr_->getEntities(ecs::_grp_FIGHTERS);
+	
+	for (ecs::Entity *e : fighters) {
 		draw(e);
 		drawId(e);
-		drawBox(e);
 	}
+
+	auto netSys = mngr_->getSystem<NetworkSystem>();
+
+	drawBox(fighters[netSys->getSide()]);
 }
 
 void RenderSystem::drawBullets() {
@@ -109,10 +127,13 @@ void RenderSystem::draw(ecs::Entity *e) {
 }
 
 void RenderSystem::drawId(ecs::Entity *e) {
-	auto id = mngr_->getComponent<FighterInfo>(e)->id_;
+	
 	auto tr = mngr_->getComponent<Transform>(e);
 
-	std::string tag = "Player " + std::to_string(id);
+	auto id = mngr_->getComponent<FighterInfo>(e)->id_;
+	auto netSys = mngr_->getSystem<NetworkSystem>();
+
+	std::string tag = netSys->getName(id);
 
 	Texture playeTag(sdlutils().renderer(), //
 			tag, //
